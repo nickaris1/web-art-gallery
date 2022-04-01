@@ -24,15 +24,27 @@ body {
     margin-left: 25%;
 }
 
+.page {
+    position: absolute;
+    top: 90px;
+}
+
 .Welcome {
     background-image: url("images/VG1.jpg");
-    height: 100%;
+    width: 100%;
+    height: 600px;
+
+    background-size: 100% 100%;
 }
 
 .Current_Collection {
     background-image: url("images/VG2.jpg");
-    background-size: cover;
-    height: 100%;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: 600px;
+    background-size: 100% 100%;
 }
 
 #id_cc {
@@ -58,7 +70,8 @@ body {
 .Events_and_Exhibitions {
     background-image: url("images/VG3.jpg");
     background-size: cover;
-    height: 100%;
+    width: 100%;
+    height: 600px;
 }
 
 #id_eae {
@@ -83,7 +96,8 @@ body {
 .Get_Tickets {
     background-image: url("images/VG4.jpg");
     background-size: cover;
-    height: 100%;
+    width: 100%;
+    height: 600px;
 }
 
 #id_gt {
@@ -110,4 +124,8 @@ body {
     background-image: linear-gradient(to bottom, rgba(83, 83, 83, 1), rgba(57, 57, 57, 1));
     font-size: 40px;
     height: 150px;
+}
+
+.More_Info h2{
+    margin: 0px;
 }
