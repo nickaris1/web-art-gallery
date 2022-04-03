@@ -99,6 +99,13 @@ body {
     transition: color .5s ease-in-out, box-shadow .5s ease-in-out;
 }
 
+.Events {
+    display:inline-block;
+    margin-left: 50px;
+    margin-top: 100px;
+    font-size: 30px;
+}
+
 #id_eae h2 {
     margin: 0;
 }
@@ -107,6 +114,7 @@ body {
     background-color: rgba(0, 0, 0, 0.7);
     color: rgba(255, 255, 255, 1);
 }
+
 
 .Get_Tickets {
     background-image: url("images/VG4.jpg");
