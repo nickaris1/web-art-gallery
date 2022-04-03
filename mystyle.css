@@ -20,13 +20,15 @@ body {
 
     border:solid black 5px;
     margin: 0px;
-    padding: 10px;
+    padding-top: 15px;
+    padding-left: 10px;
+    padding-bottom: 15px;
     z-index: 1;
 }
 
 .Header h1 {
     color: white;
-    flex-grow: 2;
+    flex-grow: 2;   
 }
 
 .Header h3, .Header a {
