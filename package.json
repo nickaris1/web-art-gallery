@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/nickaris1/web-art-gallery#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
