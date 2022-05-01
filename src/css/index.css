@@ -51,7 +51,7 @@ body {
 /* Section 1 */
 
 .Welcome {
-    background-image: url("images/VG1.jpg");
+    background-image: url("/images/VG1.jpg");
     width: 100%;
     height: 600px;    
 
@@ -61,7 +61,7 @@ body {
 /* Section 2 */
 
 .Current_Collection {
-    background-image: url("images/LF_Background.jpg");
+    background-image: url("/images/LF_Background.jpg");
     background-repeat: no-repeat;
     position: relative;
     top: 0px;
@@ -111,7 +111,7 @@ body {
 /* Section 3 */
 
 .Events_and_Exhibitions {
-    background-image: url("images/WHKW_Background.jpg");
+    background-image: url("/images/WHKW_Background.jpg");
     background-size: cover;
     width: 100%;
     height: 600px;
@@ -166,7 +166,7 @@ body {
 /* Section 4 */
 
 .Get_Tickets {
-    background-image: url("images/VG4.jpg");
+    background-image: url("/images/VG4.jpg");
     background-size: cover;
     width: 100%;
     height: 600px;
