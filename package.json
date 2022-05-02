@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/nickaris1/web-art-gallery#readme",
   "dependencies": {
+    "alert": "^5.0.10",
     "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
     "express": "^4.18.1"
   },
   "devDependencies": {
