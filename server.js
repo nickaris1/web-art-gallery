@@ -68,18 +68,14 @@ app.post("/login", (req, res, next) => {
 });
 
 app.post("/upload", (res, req, next) => {
-    const cookie = req.cookies.data; // get data cookie
-    const valid = CookieVerifier.verifyCookieAdmin(cookie);
-    if (valid === true) {
+    if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
 
     }
     res.sendStatus(401);
 });
 
 app.get("/login.html", (req, res, next) => {
-    const cookie = req.cookies.data; // get data cookie
-
-    if (cookie === undefined) {
+    if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
         next();
     } else {
         res.redirect("./index.html");
@@ -92,29 +88,23 @@ app.post("/register", (req, res, next) => {
     res.sendStatus(200);
 });
 
-app.get("/verify", (req, res) => {
-    const cookie = req.cookies.data; // get data cookie
-    if (cookie === undefined) { // not logged in
-        res.sendStatus(401);
-        // next();
-    } else {
-        const data = JSON.parse(Buffer.from(cookie, 'base64').toString('utf-8'));
-        if (data.admin === true) {
+app.get("/verify", (req, res, next) => {
+    if (CookieVerifier.verifyCookieLogin(req.cookies.data)) {
+        if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
             res.sendStatus(202);
+            return;
         } else {
             res.sendStatus(200);
+            return;
         }
     }
+    res.sendStatus(401);
 });
 
 app.get("/dashboard.html", (req, res, next) => {
-    const cookie = req.cookies.data;
-    if (cookie != undefined) {
-        const data = JSON.parse(Buffer.from(cookie, 'base64').toString('utf-8'));
-        if (data.admin === true) {
-            res.sendFile(path.join(__dirname, "/src/dashboard.html"));
-            return;
-        }
+    if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
+        res.sendFile(path.join(__dirname, "/src/dashboard.html"));
+        return;
     }
     res.sendStatus(401);
 });
