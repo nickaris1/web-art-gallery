@@ -41,3 +41,9 @@ body {
 .Header a:hover {
     color: orange;
 }
+
+.page {
+    position: absolute;
+    top: 90px;
+    width: 100%;
+}

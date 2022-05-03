@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const session = require("express-session");
+const multer = require("multer");
+const fs = require("fs");
 const CookieVerifier = require("./verify.js");
 
 const app = express();
@@ -67,12 +69,93 @@ app.post("/login", (req, res, next) => {
     }
 });
 
-app.post("/upload", (res, req, next) => {
-    if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
 
-    }
-    res.sendStatus(401);
+const handleError = (err, res) => {
+    res
+      .status(500)
+      .contentType("text/plain")
+      .end("Oops! Something went wrong!");
+  };
+
+const upload = multer({
+    dest: path.join(__dirname, "uploads/")
 });
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, './uploads/'))
+    },
+    filename: function (req, file, cb) {
+            cb(null, file.fieldname + '-' + Date.now() + file.originalname.match(/\..*$/)[0])
+    }
+});
+const multi_upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            const err = new Error('Only .png, .jpg and .jpeg format allowed!')
+            err.name = 'ExtensionError'
+            return cb(err);
+        }
+    },
+}).array('file', 2);
+
+app.post('/upload', (req, res) => {
+    multi_upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            res.status(500).send({ error: { message: `Multer uploading error: ${err.message}` } }).end();
+            return;
+        } else if (err) {
+            // An unknown error occurred when uploading.
+            if (err.name == 'ExtensionError') {
+                res.status(413).send({ error: { message: err.message } }).end();
+            } else {
+                res.status(500).send({ error: { message: `unknown uploading error: ${err.message}` } }).end();
+            }
+            return;
+        }
+
+        // Everything went fine.
+        // show file `req.files`
+        // show body `req.body`
+        res.status(200).end('Your files uploaded.');
+    })
+});
+// app.post(
+//     "/upload",
+//     upload.single("file" /* name attribute of <file> element in your form */),
+//     (req, res) => {
+//       const tempPath = req.file.path;
+//       const targetPath = path.join(__dirname, "./uploads/image.png");
+  
+//       if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+//         fs.rename(tempPath, targetPath, err => {
+//           if (err) {
+//               console.log("error");
+//               return handleError(err, res);
+//           }
+//           res
+//             .status(200)
+//             .contentType("text/plain")
+//             .end("File uploaded!");
+//         });
+//       } else {
+//         fs.unlink(tempPath, err => {
+//           if (err) return handleError(err, res);
+  
+//           res
+//             .status(403)
+//             .contentType("text/plain")
+//             .end("Only .png files are allowed!");
+//         });
+//       }
+//     }
+//   );
 
 app.get("/login.html", (req, res, next) => {
     if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {

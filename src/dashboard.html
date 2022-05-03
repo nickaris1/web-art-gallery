@@ -13,12 +13,13 @@
         <a id="id_logoutBtn" href="/logout.html" style="flex-grow: 2; text-align: center;">Log out</a>
     </div>
 
-    <div>
-        <form method="post" action="/upload">
+    <div class="page">
+        <form method="post" action="/upload" enctype="multipart/form-data" id="id_form">
             <label for="id_imgInput">Image:</label>
-            <input id="id_imgInput" type="file" id="image", accept="image/png, image/jpeg" multiple>
-
+            <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg" multiple='multiple'>
+            <input type="submit" value="submit">
         </form>
     </div>
 </body>
+<script src="/src/js/dashboard.js"></script>
 </html>
