@@ -102,7 +102,7 @@ const multi_upload = multer({
             return cb(err);
         }
     },
-}).array('file', 2);
+}).array('file', 50);
 
 app.post('/upload', (req, res) => {
     multi_upload(req, res, function (err) {
