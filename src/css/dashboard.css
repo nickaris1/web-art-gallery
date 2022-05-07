@@ -47,3 +47,14 @@ body {
     top: 90px;
     width: 100%;
 }
+
+.page > * {
+    margin: 0px 30px 30px 30px;
+}
+
+.submitButton {
+    width:auto;
+    height: 30px;
+    border-radius: 30px;
+    border: 1px solid black;
+}
