@@ -88,4 +88,14 @@
             </div>
         </div>        
     </body>  
+
+    <script> // Not final
+        if ($(window).width() < 100) {
+            document.getElementsByClassName("Header").style.flexDirection = "column";
+        }
+        else if ($(window).width() >= 100) {
+            document.getElementsByClassName("Header").style.flexDirection = "row";
+        }
+    </script>
+
 </html>
