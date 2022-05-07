@@ -14,10 +14,31 @@
     </div>
 
     <div class="page">
+        <br>
+        <h2>Add collection</h2>
+        <form method="post" action="/addCollection">
+            <label for="id_collectionName">Collection Name: </label>
+            <input id="id_collectionName" name="name" type="text" required>
+            <label for="id_collectionDescription">Collection Name: </label>
+            <input id="id_collectionDescription" name="description" type="text">
+        </form>
+        <br>
+        <h2>Image Upload</h2>
         <form method="post" action="/upload" enctype="multipart/form-data" id="id_form">
-            <label for="id_imgInput">Image:</label>
-            <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg" multiple='multiple'>
-            <input type="submit" value="submit">
+            <fieldset>
+                <legend>Collection</legend>
+                <select id="id_collectionSelect" name="collection">
+                    <option>new</option>
+                </select>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>Image Upload</legend>
+                <label for="id_imgInput">Image:</label>
+                <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg, image/svg">
+                <br><br>
+                <input type="submit" value="submit">
+            </fieldset>
         </form>
     </div>
 </body>

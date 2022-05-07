@@ -8,7 +8,7 @@ form_el.addEventListener('submit', async function (e) {
     }
 });
 
-const submit_data_fetch = await fetch('/projects', {
+const submit_data_fetch = await fetch('/upload', {
     method: 'POST',
     body: data
 });

@@ -69,14 +69,6 @@ app.post("/login", (req, res, next) => {
     }
 });
 
-
-const handleError = (err, res) => {
-    res
-      .status(500)
-      .contentType("text/plain")
-      .end("Oops! Something went wrong!");
-  };
-
 const upload = multer({
     dest: path.join(__dirname, "uploads/")
 });
@@ -86,10 +78,11 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, './uploads/'))
     },
     filename: function (req, file, cb) {
-            cb(null, file.fieldname + '-' + Date.now() + file.originalname.match(/\..*$/)[0])
+        cb(null, file.fieldname + '-' + Date.now() + file.originalname.match(/\..*$/)[0])
     }
 });
-const multi_upload = multer({
+
+const single_upload = multer({
     storage,
     // limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
     fileFilter: (req, file, cb) => {
@@ -102,10 +95,10 @@ const multi_upload = multer({
             return cb(err);
         }
     },
-}).array('file', 50);
+}).array('file', 1);
 
 app.post('/upload', (req, res) => {
-    multi_upload(req, res, function (err) {
+    single_upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             // A Multer error occurred when uploading.
             res.status(500).send({ error: { message: `Multer uploading error: ${err.message}` } }).end();
@@ -126,36 +119,6 @@ app.post('/upload', (req, res) => {
         res.status(200).end('Your files uploaded.');
     })
 });
-// app.post(
-//     "/upload",
-//     upload.single("file" /* name attribute of <file> element in your form */),
-//     (req, res) => {
-//       const tempPath = req.file.path;
-//       const targetPath = path.join(__dirname, "./uploads/image.png");
-  
-//       if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-//         fs.rename(tempPath, targetPath, err => {
-//           if (err) {
-//               console.log("error");
-//               return handleError(err, res);
-//           }
-//           res
-//             .status(200)
-//             .contentType("text/plain")
-//             .end("File uploaded!");
-//         });
-//       } else {
-//         fs.unlink(tempPath, err => {
-//           if (err) return handleError(err, res);
-  
-//           res
-//             .status(403)
-//             .contentType("text/plain")
-//             .end("Only .png files are allowed!");
-//         });
-//       }
-//     }
-//   );
 
 app.get("/login.html", (req, res, next) => {
     if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
