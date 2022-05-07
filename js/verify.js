@@ -1,4 +1,4 @@
-exports.verifyCookieAdmin = function(cookieVal) {
+export function verifyCookieAdmin(cookieVal) {
     const cookie = cookieVal; // get data cookie
     if (cookie != undefined) {
         const data = JSON.parse(Buffer.from(cookie, 'base64').toString('utf-8'));
@@ -8,7 +8,8 @@ exports.verifyCookieAdmin = function(cookieVal) {
     }
     return false;
 }
-exports.verifyCookieLogin = function(cookieVal) {
+
+export function verifyCookieLogin(cookieVal) {
     const cookie = cookieVal; // get data cookie
     if (cookie != undefined) { 
         return true;
