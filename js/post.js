@@ -1,48 +1,40 @@
 const express = require("express");
 const multer = require("multer");
+const bodyParser = require("body-parser");
 const fs = require("fs");
 const CookieVerifier = require("./verify.js");
 const path = require("path");
 const process = require('process');
-let app = express();
+const databaseAccess = require('./databaseAccess');
+
+const app = express();
 
 //Login api request
 app.post("/login", (req, res, next) => {
-    console.log("--login", req.body);
-
     const cookie = req.cookies.data; // get data cookie
-
-    if (cookie === undefined) {
-        const cookieFunc = function (adminValue) {
-            let obj = {
-                email: req.body.email,
-                pass: req.body.pass,
-                admin: adminValue
-            };
-            const str_json = JSON.stringify(obj);
+    if (cookie === undefined && typeof req.body.email === "string" && typeof req.body.email === "string") {
+        const cookieFunc = function (userdata) {
+            const str_json = JSON.stringify(userdata);
             return Buffer.from(str_json).toString('base64');
         }
 
-        if (req.body.email === "admin@admin.admin" && req.body.pass === "admin") {
-
-            res.cookie('data', cookieFunc(true), {
-                maxAge: 900000,
-                httpOnly: true
-            });
-            console.log('cookie created successfully');
-            res.redirect("./index.html");
-        } else if (req.body.email === "user@user.user" && req.body.pass === "user") {
-
-            res.cookie('data', cookieFunc(false), {
-                maxAge: 900000,
-                httpOnly: true
-            });
-            console.log('cookie created successfully');
-            res.redirect("./index.html");
-        } else {
-            res.sendStatus(403);
-            // res.redirect("./index.html");
-        }
+        databaseAccess.getUser(req.body.email, (userdata) => {
+            if (userdata === {}) {
+                console.log("Reported IP" + req.ip);
+                res.sendStatus(403);
+            }
+            if (req.body.email.trim() === userdata.Email && databaseAccess.hash(req.body.pass.trim()) === userdata.PasswordHash) {
+                res.cookie('data', cookieFunc(userdata), {
+                    maxAge: 900000,
+                    httpOnly: true
+                });
+                console.log('cookie created successfully');
+                res.redirect("./index.html");
+            } else {
+                res.sendStatus(403);
+                // res.redirect("./index.html");
+            }
+        });
     } else {
         next();
     }
@@ -61,7 +53,7 @@ const single_upload = multer({
     storage,
     // limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
     fileFilter: (req, file, cb) => {
-        if(CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
+        if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
             if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
                 cb(null, true);
             } else {
@@ -108,9 +100,17 @@ app.post('/addCollection', upload.none(), (req, res) => {
 });
 
 // Register api request
-app.post("/register", (req, res, next) => {
-    console.log("--login", req.body);
-    res.sendStatus(200);
+app.post("/register", bodyParser.json(), (req, res, next) => {
+    if (req.body.email != undefined) {
+        databaseAccess.addUser(req.body, (ret) => {
+            if (ret === "Exists") {
+                res.sendStatus(403);
+            } else {
+                res.sendStatus(200);
+
+            }
+        });
+    }
 });
 
 

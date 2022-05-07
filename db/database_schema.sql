@@ -83,6 +83,6 @@ CREATE TABLE IF NOT EXISTS "ARTIST" (
     PRIMARY KEY("id")
 );
 
-
+INSERT INTO "USER" ("Email", "Name", "Phone", "PasswordHash", "IsAdmin") VALUES ('admin@admin.admin', 'Admin', 6942069420, '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', TRUE);
 
 COMMIT;

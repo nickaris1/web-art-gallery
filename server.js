@@ -2,7 +2,11 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const sqlite3 = require("sqlite3");
 const CookieVerifier = require("./js/verify.js");
+const databaseAccess = require("./js/databaseAccess");
+
+
 
 const app = express();
 const port = 5500;
@@ -26,8 +30,6 @@ app.use(function (req, res, next) {
     }
     next(); // <-- important!
 });
-
-
 
 app.get("/login.html", (req, res, next) => {
     if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
@@ -69,6 +71,25 @@ app.use("/", restrictAccess);
 app.use(express.static('./'));
 app.use(express.static('./src'));
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+
+const server = app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+
+    global.db = new sqlite3.Database("./db/database.db", sqlite3.OPEN_READWRITE, (err) => {
+        if (err) {
+            console.log("Error opening db");
+            exit(0);
+        }
+    });
+});
+
+server.on('close', () => {
+    console.log('Closing ...');
+    global.db.close((err) => {
+        console.log("Unable to close db: " + err);
+    });
+});
+
+process.on('SIGINT', () => {
+    server.close(() => { process.exit(0); });
 });
