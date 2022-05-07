@@ -12,6 +12,9 @@ app.use(cookieParser());
 
 // app.use(session({secret: "dGhpc2lzbXlzZWNyZXRrZXl1ZnVjayE9"}));
 
+let posts = require("./js/post.js");
+app.use("/", posts);
+
 
 app.use(function (req, res, next) {
     const cookie = req.cookies.data;
@@ -24,8 +27,7 @@ app.use(function (req, res, next) {
     next(); // <-- important!
 });
 
-let posts = require("./js/post.js");
-app.use("/", posts);
+
 
 app.get("/login.html", (req, res, next) => {
     if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
@@ -61,17 +63,8 @@ app.get("/logout.html", (req, res, next) => {
     res.redirect("./index.html");
 });
 
-app.get("/server.js", (req, res) => {
-    res.sendStatus(401);
-});
-
-app.get("/verify.js", (req, res) => {
-    res.sendStatus(401);
-});
-
-app.get("/js/*", (req, res) => {
-    res.sendStatus(401);
-});
+const restrictAccess = require("./js/restrictAccess");
+app.use("/", restrictAccess);
 
 app.use(express.static('./'));
 app.use(express.static('./src'));
