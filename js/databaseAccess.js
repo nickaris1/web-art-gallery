@@ -27,8 +27,6 @@ exports.getUser = function(userEmail, callback) {
 }
 
 exports.addUser = function(userdata, callback) {
-    console.log(userdata);
-
     this.getUser(userdata.email, (dbUserData) => {
         if (dbUserData === undefined || dbUserData === {}) {
             global.db.all("INSERT INTO USER ('Email', 'Name', 'Phone', 'PasswordHash') VALUES (?, ?, ?, ?)", [userdata.email.trim(), userdata.name.trim(), userdata.phone, this.hash(userdata.pass.trim())], (error, rows) => {
@@ -37,8 +35,7 @@ exports.addUser = function(userdata, callback) {
                     ret = {};
                     callback({});
                 }
-                console.log(rows);
-                
+                callback(200);
             });
         } else {
             callback("Exists");

@@ -23,13 +23,16 @@ app.post("/login", (req, res, next) => {
                 console.log("Reported IP" + req.ip);
                 res.sendStatus(403);
             }
-            if (req.body.email.trim() === userdata.Email && databaseAccess.hash(req.body.pass.trim()) === userdata.PasswordHash) {
-                res.cookie('data', cookieFunc(userdata), {
-                    maxAge: 900000,
-                    httpOnly: true
-                });
-                console.log('cookie created successfully');
-                res.redirect("./index.html");
+            if (req.body.email.trim() === userdata.Email ) {
+                if(databaseAccess.hash(req.body.pass.trim()) === userdata.PasswordHash){
+                    res.cookie('data', cookieFunc(userdata), {
+                        maxAge: 900000,
+                        httpOnly: true
+                    });
+                    console.log('cookie created successfully');
+                    res.redirect("./index.html");
+                    
+                }
             } else {
                 res.sendStatus(403);
                 // res.redirect("./index.html");
@@ -95,7 +98,6 @@ app.post('/upload', (req, res) => {
 const upload = multer();
 app.post('/addCollection', upload.none(), (req, res) => {
 
-    console.log("add: " + req.body);
     res.redirect("/dashboard.html");
 });
 

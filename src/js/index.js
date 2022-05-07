@@ -6,13 +6,11 @@ function httpGet(ulr) {
 
         xmlHttp.onreadystatechange = function() {
             if (this.readyState === this.DONE) {
-                console.log(this.status); // do something; the request has completed
                 resstatus(this.status);
             }
         }
         xmlHttp.open("GET", ulr);
         xmlHttp.send();
-        console.log(xmlHttp.status);
     });
 }
 
