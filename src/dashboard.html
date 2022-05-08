@@ -15,7 +15,17 @@
 
     <div class="page">
         <br>
-        <form method="post" action="/addCollection">
+        <form id="id_addArtistForm" method="post" action="/addArtist">
+            <fieldset>
+                <legend><h2>Add artist</h2></legend>
+                <label for="id_artistName">Artist Name: </label>
+                <input id="id_artistName" name="name" type="text" required>
+                <br><br>
+                <input type="submit" value="Submit" class="submitButton">
+            </fieldset>
+        </form>
+        <br>
+        <form id="id_addCollectionForm" method="post" action="/addCollection">
             <fieldset>
                 <legend><h2>Add collection</h2></legend>
                 <label for="id_collectionName">Collection Name: </label>
@@ -23,7 +33,6 @@
                 <br><br>
                 <label for="id_collectionArtist">Artist: </label>
                 <select id="id_artistSelect" name="artist">
-                    <option>new</option>
                 </select>
                 <br><br>
                 <label for="id_collectionDescription">Collection Description: </label><br>
@@ -39,7 +48,6 @@
                     <fieldset>
                         <legend>Collection</legend>
                         <select id="id_collectionSelect" name="collection">
-                            <option>new</option>
                         </select>
                     </fieldset>
                     <br>
@@ -53,6 +61,6 @@
                 </fieldset>
             </form>
         </div>
+        <script src="/src/js/dashboard.js"></script>
 </body>
-<script src="/src/js/dashboard.js"></script>
 </html>

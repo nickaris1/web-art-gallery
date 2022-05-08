@@ -21,13 +21,13 @@ app.use("/", posts);
 
 
 app.use(function (req, res, next) {
-    const cookie = req.cookies.data;
-    if (cookie === undefined) {
+    // const cookie = req.cookies.data;
+    // if (cookie === undefined) {
 
-    } else {
-        const decode = Buffer.from(cookie, 'base64').toString('utf-8');
-        console.log(JSON.parse(decode));
-    }
+    // } else {
+    //     const decode = Buffer.from(cookie, 'base64').toString('utf-8');
+    //     console.log(JSON.parse(decode));
+    // }
     next(); // <-- important!
 });
 
@@ -63,6 +63,19 @@ app.get("/dashboard.html", (req, res, next) => {
 app.get("/logout.html", (req, res, next) => {
     res.clearCookie("data");
     res.redirect("./index.html");
+});
+
+
+app.get("/getArtist", (req, res) => {
+    databaseAccess.getArtists((rows) => {
+        res.status(200).send(JSON.stringify(rows));
+    });
+});
+
+app.get("/getCollection", (req, res) => {
+    databaseAccess.getCollection((rows) => {
+        res.status(200).send(JSON.stringify(rows));
+    });
 });
 
 const restrictAccess = require("./js/restrictAccess");

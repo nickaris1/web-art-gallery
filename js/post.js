@@ -97,19 +97,36 @@ app.post('/upload', (req, res) => {
 
 const upload = multer();
 app.post('/addCollection', upload.none(), (req, res) => {
-
-    res.redirect("/dashboard.html");
+    databaseAccess.addCollection(req.body, (status) => {
+        if (status === 200) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(404);
+        }
+    });
 });
+
+app.post('/addArtist', upload.none(), (req, res) => {
+    if(typeof req.body.name === "string") {
+        databaseAccess.addArtist(req.body.name, (status) => {
+            if (status === 200) {
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(404);
+            }
+        });
+    }
+});
+
 
 // Register api request
 app.post("/register", bodyParser.json(), (req, res, next) => {
     if (req.body.email != undefined) {
         databaseAccess.addUser(req.body, (ret) => {
-            if (ret === "Exists") {
-                res.sendStatus(403);
-            } else {
+            if (ret === 200) {
                 res.sendStatus(200);
-
+            } else {
+                res.sendStatus(404);
             }
         });
     }

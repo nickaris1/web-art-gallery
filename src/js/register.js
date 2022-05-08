@@ -10,7 +10,7 @@ registerForm.onsubmit = function(event) {
     xhr.onreadystatechange = function() { // Call a function when the state changes.
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             window.location.replace("/login.html");
-        } else if (this.readyState === XMLHttpRequest.DONE && this.status === 403) {
+        } else if (this.readyState === XMLHttpRequest.DONE && this.status === 404) {
             alert("User Exists!");
         }
     }
