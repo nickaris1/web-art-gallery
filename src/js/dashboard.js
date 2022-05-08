@@ -4,8 +4,8 @@
 const artistSelect = document.querySelector("#id_artistSelect");
 const xhrArtistSelect = new XMLHttpRequest();
 xhrArtistSelect.open("GET", "/getArtist", true);
-xhrArtistSelect.onreadystatechange = function() {
-    if(this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+xhrArtistSelect.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
         myArr.forEach(element => {
             const selectElement = document.createElement("option");
@@ -22,8 +22,8 @@ xhrArtistSelect.send();
 const collectionSelect = document.querySelector("#id_collectionSelect");
 const xhrCollectionSelect = new XMLHttpRequest();
 xhrCollectionSelect.open("GET", "/getCollection", true);
-xhrCollectionSelect.onreadystatechange = function() {
-    if(this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+xhrCollectionSelect.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
         myArr.forEach(element => {
             const selectElement = document.createElement("option");
@@ -42,16 +42,26 @@ xhrCollectionSelect.send();
 
 //=================================================================
 // Form Manipulation
-const form_el = document.querySelector("#id_form");
-form_el.addEventListener('submit', async function (e) {
-    const data = [];
-    const files = e.target.file.files;
-    if (files.length != 0) {
-        for (const single_file of files) {
-            data.push('file', single_file)
+const form_el = document.querySelector("#id_addImageForm");
+form_el.onsubmit = function (event) {
+    event.preventDefault();
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/upload", true);
+
+    xhr.onreadystatechange = function () { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            alert("Image added");
+
+            window.location.replace("/dashboard.html");
+        } else if (this.readyState === XMLHttpRequest.DONE && this.status === 404) {
+            alert("Error");
+        } else if (this.readyState === XMLHttpRequest.DONE && this.status === 101) {
+            alert("Image already exists");
         }
     }
-});
+    xhr.send(new FormData(form_el));
+    return false;
+}
 
 
 const addArtistForm = document.querySelector("#id_addArtistForm");

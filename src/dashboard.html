@@ -42,19 +42,26 @@
             </fieldset>
         </form>
         <br>
-        <form method="post" action="/upload" enctype="multipart/form-data" id="id_form">
+        <form method="post" action="/upload" enctype="multipart/form-data" id="id_addImageForm">
                 <fieldset>
                     <legend><h2>Image Upload</h2></legend>
                     <fieldset>
-                        <legend>Collection</legend>
-                        <select id="id_collectionSelect" name="collection">
+                        <legend>Image Info</legend>
+                        <label for="id_imgName">Image Name: </label>
+                        <input id="id_imgName" type="text" name="name" required>
+                        <br>
+                        <label for="id_collectionSelect">Collection: </label>
+                        <select id="id_collectionSelect" name="collection" required>
                         </select>
+                        <br>
+                        <label for="id_imgDescription">Description:</label><br>
+                        <textarea  id="id_imgDescription" name="description"></textarea>
                     </fieldset>
                     <br>
                     <fieldset>
                         <legend>Image Upload</legend>
                         <label for="id_imgInput">Image:</label>
-                        <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg, image/svg">
+                        <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg, image/svg" required>
                         <br><br>
                         <input type="submit" value="Submit" class="submitButton">
                     </fieldset>

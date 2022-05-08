@@ -102,7 +102,7 @@ exports.getArtist = function (artistName, callback) {
  * @param {object} collectionData Artist name to add
  * @param {function} callback callback function 0 => error, 200 => OK
  */
- exports.addCollection = function (collectionData, callback) {
+exports.addCollection = function (collectionData, callback) {
     this.getArtist(collectionData.artist.trim(), (artistData) => {
         if (artistData != undefined) {
             global.db.all("INSERT INTO COLLECTION ('Name', 'Description', 'ArtistID') VALUES (?, ?, ?)", [collectionData.name.trim(), collectionData.description.trim(), artistData.id], (error, rows) => {
@@ -124,7 +124,7 @@ exports.getArtist = function (artistName, callback) {
 /**
  * @param {function} callback 
  */
- exports.getCollection = function(callback) {
+exports.getCollections = function (callback) {
     global.db.all("SELECT * FROM 'COLLECTION'", (error, rows) => {
         if (error) {
             console.log(error);
@@ -133,4 +133,68 @@ exports.getArtist = function (artistName, callback) {
             callback(rows);
         }
     });
+}
+
+/**
+ * @param {string} collectionName
+ * @param {function} callback 
+ */
+exports.getCollection = function (collectionName, callback) {
+    global.db.all("SELECT * FROM 'COLLECTION' where name=?", [collectionName], (error, rows) => {
+        if (error) {
+            console.log(error);
+            callback({});
+        } else {
+            callback(rows[0]);
+        }
+    });
+}
+
+
+/**
+ * @param {string} imageName
+ * @param {string} imagePath
+ * @param {function} callback 
+ */
+ exports.getImage = function (imageName, imagePath, callback) {
+    console.log(imagePath);
+    global.db.all("SELECT * FROM 'IMAGE' where Name=?", [imageName], (error, rows) => {
+        if (error) {
+            console.log(error);
+            callback({});
+        } else {
+            callback(rows[0]);
+        }
+    });
+}
+
+
+/**
+ * Add Image entry to db
+ * @param {object} collectionData Artist name to add
+ * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
+ */
+ exports.addImage = function (imageData, callback) {
+    this.getImage(imageData.name, imageData.srcPath, (status) => {
+        if (status === undefined) {
+            this.getCollection(imageData.collection.trim(), (collectionData) => {
+                if (collectionData != undefined) {
+                    global.db.all("INSERT INTO IMAGE ('Name', 'Src_path', 'Description', 'CollectionID') VALUES (?, ?, ?, ?)", [imageData.name.trim(), imageData.srcPath.trim(), imageData.description.trim(),collectionData.id], (error, rows) => {
+                        if (error) {
+                            console.log(error);
+                            callback(0);
+                        } else {
+                            callback(200);
+                        }
+                    });
+                } else {
+                    callback(0);
+                }
+        
+            });
+        } else {
+            callback(1);
+        }
+    });
+    
 }

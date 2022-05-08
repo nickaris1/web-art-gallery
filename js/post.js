@@ -23,15 +23,15 @@ app.post("/login", (req, res, next) => {
                 console.log("Reported IP" + req.ip);
                 res.sendStatus(403);
             }
-            if (req.body.email.trim() === userdata.Email ) {
-                if(databaseAccess.hash(req.body.pass.trim()) === userdata.PasswordHash){
+            if (req.body.email.trim() === userdata.Email) {
+                if (databaseAccess.hash(req.body.pass.trim()) === userdata.PasswordHash) {
                     res.cookie('data', cookieFunc(userdata), {
                         maxAge: 900000,
                         httpOnly: true
                     });
                     console.log('cookie created successfully');
                     res.redirect("./index.html");
-                    
+
                 }
             } else {
                 res.sendStatus(403);
@@ -66,7 +66,9 @@ const single_upload = multer({
                 return cb(err);
             }
         } else {
-            res.sendStatus(401);
+            const err = new Error('Not authorized')
+            err.name = 'NotAuthorizedError'
+            return cb(err);
         }
     },
 }).array('file', 1);
@@ -81,17 +83,27 @@ app.post('/upload', (req, res) => {
             // An unknown error occurred when uploading.
             if (err.name == 'ExtensionError') {
                 res.status(413).send({ error: { message: err.message } }).end();
+            } else if (err.name === "NotAuthorizedError") {
+                res.status(413).send({ error: { message: err.message } }).end();
             } else {
                 res.status(500).send({ error: { message: `unknown uploading error: ${err.message}` } }).end();
             }
             return;
         }
 
-        // Everything went fine.
-        // show file `req.files`
-        // show body `req.body`
-        res.status(200).end('Your files uploaded.');
-    })
+        const imageData = req.body;
+        imageData["srcPath"] = path.join(process.cwd(), './uploads/', req.files[0].filename);
+
+        databaseAccess.addImage(imageData, (status) => {
+            if (status === 200) {
+                res.sendStatus(200);
+            } else if (status === 1) {
+                res.sendStatus(101);
+            } else {
+                res.sendStatus(404);
+            }
+        });
+    });
 });
 
 
@@ -107,7 +119,7 @@ app.post('/addCollection', upload.none(), (req, res) => {
 });
 
 app.post('/addArtist', upload.none(), (req, res) => {
-    if(typeof req.body.name === "string") {
+    if (typeof req.body.name === "string") {
         databaseAccess.addArtist(req.body.name, (status) => {
             if (status === 200) {
                 res.sendStatus(200);

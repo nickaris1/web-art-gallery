@@ -73,7 +73,7 @@ app.get("/getArtist", (req, res) => {
 });
 
 app.get("/getCollection", (req, res) => {
-    databaseAccess.getCollection((rows) => {
+    databaseAccess.getCollections((rows) => {
         res.status(200).send(JSON.stringify(rows));
     });
 });
