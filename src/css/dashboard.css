@@ -58,3 +58,22 @@ body {
     border-radius: 30px;
     border: 1px solid black;
 }
+
+ul {
+    border: 3px solid black;
+    border-radius: 3px;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+li p {
+    display: inline-block;
+}

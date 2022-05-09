@@ -41,7 +41,7 @@ exports.getUsers = function (callback) {
             console.log(error);
             callback({});
         } else {
-            callback(rows[0]);
+            callback(rows);
         }
     });
 }

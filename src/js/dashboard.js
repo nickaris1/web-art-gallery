@@ -44,9 +44,28 @@ xhrUserList.open("GET", "/getUsers", true);
 xhrUserList.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
-        myArr.forEach(user => {
-            const listItem = document.createElement("li");
+        myArr.forEach((user) => {
             console.log(user);
+            const listItem = document.createElement("li");
+            
+            const id = document.createElement("p");
+            id.textContent = user.id;
+            listItem.appendChild(id);
+            
+            const name = document.createElement("p");
+            name.textContent = user.Name;
+            listItem.appendChild(name);
+            const email = document.createElement("p");
+            email.textContent = user.Email;
+            listItem.appendChild(email);
+            const removeBtn = document.createElement("input");
+            removeBtn.value = "delete"
+            listItem.appendChild(removeBtn);
+
+            userList.appendChild(listItem);
+            removeBtn.addEventListener('click', (event) => {
+                userList.removeChild(listItem);
+            });
         });
     }
 }
