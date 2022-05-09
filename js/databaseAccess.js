@@ -32,6 +32,21 @@ exports.getUser = function (userEmail, callback) {
 }
 
 /**
+ * 
+ * @param {function} callback {} => if user not found, userdata in json if user is found
+ */
+exports.getUsers = function (callback) {
+    global.db.all("SELECT * FROM 'USER'", (error, rows) => {
+        if (error) {
+            console.log(error);
+            callback({});
+        } else {
+            callback(rows[0]);
+        }
+    });
+}
+
+/**
  * Add user to Database
  * @param {JSON} userdata 
  * @param {Function} callback callback function 0 => error, 200 => OK
@@ -156,7 +171,7 @@ exports.getCollection = function (collectionName, callback) {
  * @param {string} imagePath
  * @param {function} callback 
  */
- exports.getImage = function (imageName, imagePath, callback) {
+exports.getImage = function (imageName, imagePath, callback) {
     console.log(imagePath);
     global.db.all("SELECT * FROM 'IMAGE' where Name=?", [imageName], (error, rows) => {
         if (error) {
@@ -174,12 +189,12 @@ exports.getCollection = function (collectionName, callback) {
  * @param {object} collectionData Artist name to add
  * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
  */
- exports.addImage = function (imageData, callback) {
+exports.addImage = function (imageData, callback) {
     this.getImage(imageData.name, imageData.srcPath, (status) => {
         if (status === undefined) {
             this.getCollection(imageData.collection.trim(), (collectionData) => {
                 if (collectionData != undefined) {
-                    global.db.all("INSERT INTO IMAGE ('Name', 'Src_path', 'Description', 'CollectionID') VALUES (?, ?, ?, ?)", [imageData.name.trim(), imageData.srcPath.trim(), imageData.description.trim(),collectionData.id], (error, rows) => {
+                    global.db.all("INSERT INTO IMAGE ('Name', 'Src_path', 'Description', 'CollectionID') VALUES (?, ?, ?, ?)", [imageData.name.trim(), imageData.srcPath.trim(), imageData.description.trim(), collectionData.id], (error, rows) => {
                         if (error) {
                             console.log(error);
                             callback(0);
@@ -190,11 +205,11 @@ exports.getCollection = function (collectionName, callback) {
                 } else {
                     callback(0);
                 }
-        
+
             });
         } else {
             callback(1);
         }
     });
-    
+
 }

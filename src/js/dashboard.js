@@ -33,8 +33,26 @@ xhrCollectionSelect.onreadystatechange = function () {
         });
     }
 }
-
 xhrCollectionSelect.send();
+
+// ===============================================================
+// User
+
+const userList = document.querySelector("#id_userList");
+const xhrUserList = new XMLHttpRequest();
+xhrUserList.open("GET", "/getUsers", true);
+xhrUserList.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        const myArr = JSON.parse(this.responseText);
+        myArr.forEach(user => {
+            const listItem = document.createElement("li");
+            console.log(user);
+        });
+    }
+}
+xhrUserList.send();
+
+
 
 
 //=================================================================

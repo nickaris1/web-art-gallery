@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <title>Dashboard</title>
 </head>
+
 <body>
     <div class="Header">
         <a href="/index.html">Home</a>
@@ -17,7 +19,9 @@
         <br>
         <form id="id_addArtistForm" method="post" action="/addArtist">
             <fieldset>
-                <legend><h2>Add artist</h2></legend>
+                <legend>
+                    <h2>Add artist</h2>
+                </legend>
                 <label for="id_artistName">Artist Name: </label>
                 <input id="id_artistName" name="name" type="text" required>
                 <br><br>
@@ -27,7 +31,9 @@
         <br>
         <form id="id_addCollectionForm" method="post" action="/addCollection">
             <fieldset>
-                <legend><h2>Add collection</h2></legend>
+                <legend>
+                    <h2>Add collection</h2>
+                </legend>
                 <label for="id_collectionName">Collection Name: </label>
                 <input id="id_collectionName" name="name" type="text" required>
                 <br><br>
@@ -36,38 +42,47 @@
                 </select>
                 <br><br>
                 <label for="id_collectionDescription">Collection Description: </label><br>
-                <textarea  id="id_collectionDescription" name="description"></textarea>
+                <textarea id="id_collectionDescription" name="description"></textarea>
                 <br><br>
                 <input type="submit" value="Submit" class="submitButton">
             </fieldset>
         </form>
         <br>
         <form method="post" action="/upload" enctype="multipart/form-data" id="id_addImageForm">
+            <fieldset>
+                <legend>
+                    <h2>Image Upload</h2>
+                </legend>
                 <fieldset>
-                    <legend><h2>Image Upload</h2></legend>
-                    <fieldset>
-                        <legend>Image Info</legend>
-                        <label for="id_imgName">Image Name: </label>
-                        <input id="id_imgName" type="text" name="name" required>
-                        <br>
-                        <label for="id_collectionSelect">Collection: </label>
-                        <select id="id_collectionSelect" name="collection" required>
-                        </select>
-                        <br>
-                        <label for="id_imgDescription">Description:</label><br>
-                        <textarea  id="id_imgDescription" name="description"></textarea>
-                    </fieldset>
+                    <legend>Image Info</legend>
+                    <label for="id_imgName">Image Name: </label>
+                    <input id="id_imgName" type="text" name="name" required>
                     <br>
-                    <fieldset>
-                        <legend>Image Upload</legend>
-                        <label for="id_imgInput">Image:</label>
-                        <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg, image/svg" required>
-                        <br><br>
-                        <input type="submit" value="Submit" class="submitButton">
-                    </fieldset>
+                    <label for="id_collectionSelect">Collection: </label>
+                    <select id="id_collectionSelect" name="collection" required>
+                    </select>
+                    <br>
+                    <label for="id_imgDescription">Description:</label><br>
+                    <textarea id="id_imgDescription" name="description"></textarea>
                 </fieldset>
-            </form>
-        </div>
-        <script src="/src/js/dashboard.js"></script>
+                <br>
+                <fieldset>
+                    <legend>Image Upload</legend>
+                    <label for="id_imgInput">Image:</label>
+                    <input id="id_imgInput" type="file" name="file" accept="image/png, image/jpeg, image/svg" required>
+                    <br><br>
+                    <input type="submit" value="Submit" class="submitButton">
+                </fieldset>
+            </fieldset>
+        </form>
+
+        <section id="id_userSection">
+            <ul id="id_userList">
+            </ul>
+        </section>
+    </div>
+
+    <script src="/src/js/dashboard.js"></script>
 </body>
+
 </html>

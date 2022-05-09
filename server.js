@@ -72,6 +72,14 @@ app.get("/getArtist", (req, res) => {
     });
 });
 
+app.get("/getUsers", (req, res) => {
+    if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
+        databaseAccess.getUsers((rows) => {
+            res.status(200).send(JSON.stringify(rows));
+        });
+    }
+});
+
 app.get("/getCollection", (req, res) => {
     databaseAccess.getCollections((rows) => {
         res.status(200).send(JSON.stringify(rows));
