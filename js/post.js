@@ -121,6 +121,31 @@ app.post('/addCollection', upload.none(), (req, res) => {
 app.post('/addArtist', upload.none(), (req, res) => {
     if (typeof req.body.name === "string") {
         databaseAccess.addArtist(req.body.name, (status) => {
+            try {
+                if (status === 200) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(404);
+                }
+            } catch(e) {
+                    
+            }
+        });
+    }
+});
+
+app.post('/addEvent', upload.none(), (req, res) => {
+    if (!CookieVerifier.verifyCookieAdmin(req.cookies.data)) { 
+        res.sendStatus(401);
+        return;
+    }
+
+    const startDate = new Date(req.body.startDate);
+    const endDate = new Date(req.body.endDate);
+    if (startDate <= endDate && parseInt(req.body.maxTickets) > 0 && req.body.collections) {
+        req.body.startDate = startDate.toISOString();
+        req.body.endDate = endDate.toISOString();
+        databaseAccess.addEvent(req.body, (status) => {
             if (status === 200) {
                 res.sendStatus(200);
             } else {
@@ -130,12 +155,11 @@ app.post('/addArtist', upload.none(), (req, res) => {
     }
 });
 
-
 // Register api request
 app.post("/register", bodyParser.json(), (req, res, next) => {
     if (req.body.email != undefined) {
-        databaseAccess.addUser(req.body, (ret) => {
-            if (ret === 200) {
+        databaseAccess.addUser(req.body, (status) => {
+            if (status === 200) {
                 res.sendStatus(200);
             } else {
                 res.sendStatus(404);

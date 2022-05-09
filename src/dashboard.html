@@ -75,7 +75,36 @@
                 </fieldset>
             </fieldset>
         </form>
-
+        <br>
+        <form id="id_addEventForm" method="post" action="/addEvent">
+            <fieldset>
+                <legend><h2>Event</h2></legend>
+                <br>
+                <label for="id_eventAddress">Address: </label>
+                <input type="text" id="id_eventAddress" name="address" required>
+                <br>
+                <label for="id_startDate">Start Date: </label>
+                <input type="datetime-local" id="id_startDate" name="startDate" required>
+                <br>
+                <label for="id_endDate">End Date: </label>
+                <input type="datetime-local" id="id_endDate" name="endDate" required>
+                <br>
+                <label for="id_maxTickets">Max Tickets: </label>
+                <input type="number" id="id_maxTickets" name="maxTickets" required>
+                <br>
+                <fieldset>
+                    <Legend>Collections</Legend>
+                    <div id="id_collectionListSelect">
+                        
+                    </div> 
+                </fieldset>
+                <!-- <ul id="id_collectionListSelect" style="list-style-type: none;">
+                    
+                </ul> -->
+                <br>
+                <input type="submit" value="Submit" class="submitButton">
+            </fieldset>
+        </form>
         <section id="id_userSection">
             <h2>Users: </h2>
             <ul id="id_userList">

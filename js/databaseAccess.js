@@ -90,7 +90,7 @@ exports.deleteUser = function (userid, callback) {
 
 /**
  * Add Artist entry to db
- * @param {string} artistName Artist name to add
+ * @param {string} artistName 
  * @param {function} callback callback function 0 => error, 200 => OK
  */
 exports.addArtist = function (artistName, callback) {
@@ -135,7 +135,7 @@ exports.getArtist = function (artistName, callback) {
 
 /**
  * Add Collection entry to db
- * @param {object} collectionData Artist name to add
+ * @param {object} collectionData 
  * @param {function} callback callback function 0 => error, 200 => OK
  */
 exports.addCollection = function (collectionData, callback) {
@@ -207,7 +207,7 @@ exports.getImage = function (imageName, imagePath, callback) {
 
 /**
  * Add Image entry to db
- * @param {object} collectionData Artist name to add
+ * @param {object} imageData 
  * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
  */
 exports.addImage = function (imageData, callback) {
@@ -229,6 +229,68 @@ exports.addImage = function (imageData, callback) {
             });
         } else {
             callback(1);
+        }
+    });
+}
+
+/**
+ * Add Event entry to db
+ * @param {object} eventData 
+ * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
+ */
+exports.addEvent = function (eventData, callback) {
+    global.db.all("INSERT INTO EVENT ('Address', 'StartDate', 'EndDate', 'MaxTickets') VALUES (?, ?, ?, ?)", [eventData.address, eventData.startDate, eventData.endDate, eventData.maxTickets], (error, rows) => {
+        if (error) {
+            console.log(error);
+            callback(0);
+        } else {
+            // Get last Event id
+            global.db.all("Select * from EVENT", (error, rows) => {
+                if (error) {
+                    console.log(error);
+                    callback(0);
+                } else {
+                    // Add entries to EXHIBITS
+                    if (typeof eventData.collections === "string") {
+                        this.getCollection(eventData.collections, (row) => {
+                            this.addExhibition({ collectionId: row.id, eventId: rows[rows.length - 1].id }, (status) => {
+                                if (status === 200) {
+                                    callback(200);
+                                } else {
+                                    callback(0);
+                                }
+                            });
+                        });
+                    } else {
+                        eventData.collections.forEach(collection => {
+                            this.getCollection(collection, (row) => {
+                                this.addExhibition({ collectionId: row.id, eventId: rows[rows.length - 1].id }, (status) => {
+                                    return;
+                                });
+                            });
+                            
+                        });
+                    }
+                }
+            });
+            callback(200);
+        }
+    });
+}
+
+
+/**
+ * Add Exhibits entry to db
+ * @param {object} exhibitsData 
+ * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
+ */
+exports.addExhibition = function (exhibitsData, callback) {
+    global.db.all("INSERT INTO EXHIBITS ('EventID', 'CollectionID') VALUES (?, ?)", [exhibitsData.eventId, exhibitsData.collectionId], (error, rows) => {
+        if (error) {
+            console.log(error);
+            callback(0);
+        } else {
+            callback(200);
         }
     });
 }

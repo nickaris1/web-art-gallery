@@ -20,16 +20,36 @@ xhrArtistSelect.send();
 //===============================================================
 
 const collectionSelect = document.querySelector("#id_collectionSelect");
+const collectionListEventSelect = document.querySelector("#id_collectionListSelect");
+
 const xhrCollectionSelect = new XMLHttpRequest();
 xhrCollectionSelect.open("GET", "/getCollection", true);
 xhrCollectionSelect.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
+        let count = 0;
         myArr.forEach(element => {
             const selectElement = document.createElement("option");
             selectElement.value = element.Name;
             selectElement.innerText = element.Name;
             collectionSelect.appendChild(selectElement);
+
+
+            // create list for Events
+            const listElement = document.createElement("div");
+            const checkBox = document.createElement("input");
+            checkBox.id = `id_cb${count}`;
+            checkBox.type = "checkbox";
+            checkBox.name = "collections";
+            checkBox.value = element.Name;
+            const checkBoxLabel = document.createElement("label");
+            checkBoxLabel.for = `id_cb${count}`;
+            checkBoxLabel.textContent = element.Name;
+            listElement.appendChild(checkBox);
+            listElement.appendChild(checkBoxLabel);
+            collectionListEventSelect.appendChild(listElement);
+            
+            count++;
         });
     }
 }
@@ -152,3 +172,35 @@ addCollectionForm.onsubmit = function (event) {
 }
 
 
+
+const addEventForm = document.querySelector("#id_addEventForm");
+addEventForm.onsubmit = function (event) {
+    event.preventDefault();
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/addEvent", true);
+
+    xhr.onreadystatechange = function () { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            alert("Event added");
+
+            window.location.replace("/dashboard.html");
+        } else if (this.readyState === XMLHttpRequest.DONE && this.status === 404) {
+            alert("Error");
+        } else if (this.readyState === XMLHttpRequest.DONE && this.status === 401) {
+            alert("Unauthorized Action.");
+        }
+    }
+    const formdata = new FormData(addEventForm);
+    const startDate = new Date(formdata.get("startDate"));
+    const endDate = new Date(formdata.get("endDate"));
+    const maxTickets = formdata.get("maxTickets");
+    const collections = formdata.getAll("collections");
+
+    if (maxTickets > 0 && startDate <= endDate && collections.length > 0) {
+        xhr.send(formdata);
+    } else {
+        alert("Missing data");
+    }
+    
+    return false;
+}
