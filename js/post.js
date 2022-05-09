@@ -144,6 +144,18 @@ app.post("/register", bodyParser.json(), (req, res, next) => {
     }
 });
 
-
+app.post("/deleteUser", upload.none(), (req, res) => {
+    if (CookieVerifier.verifyCookieAdmin(req.cookies.data) && typeof parseInt(req.body.id) === "number") {
+        databaseAccess.deleteUser(parseInt(req.body.id), (status) => {
+            if (status === 200) {
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(401);
+            }
+        });
+    } else {
+        res.sendStatus(401);
+    }
+});
 
 module.exports = app;

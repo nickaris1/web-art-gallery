@@ -68,6 +68,27 @@ exports.addUser = function (userdata, callback) {
 }
 
 /**
+ * Delete user from Database
+ * @param {userid} userId 
+ * @param {Function} callback callback function 0 => error, 200 => OK
+ */
+exports.deleteUser = function (userid, callback) {
+    if (userid != 1) {
+        global.db.all("DELETE FROM USER where id=?", [userid], (error, rows) => {
+            if (error) {
+                console.log(error);
+                callback(0);
+            } else {
+                callback(200);
+            }
+        });
+    } else {
+        callback(0);
+    }
+}
+
+
+/**
  * Add Artist entry to db
  * @param {string} artistName Artist name to add
  * @param {function} callback callback function 0 => error, 200 => OK
@@ -205,11 +226,9 @@ exports.addImage = function (imageData, callback) {
                 } else {
                     callback(0);
                 }
-
             });
         } else {
             callback(1);
         }
     });
-
 }

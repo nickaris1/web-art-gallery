@@ -45,7 +45,6 @@ xhrUserList.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
         myArr.forEach((user) => {
-            console.log(user);
             const listItem = document.createElement("li");
             
             const id = document.createElement("p");
@@ -64,7 +63,20 @@ xhrUserList.onreadystatechange = function () {
 
             userList.appendChild(listItem);
             removeBtn.addEventListener('click', (event) => {
-                userList.removeChild(listItem);
+                
+                const deleteUserRequest = new XMLHttpRequest();
+                deleteUserRequest.open("POST", "/deleteUser", true);
+                deleteUserRequest.onreadystatechange = function () { // Call a function when the state changes.
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        userList.removeChild(listItem);
+                        alert(`user ${user.id} deleted`);
+                    } else if (this.readyState === XMLHttpRequest.DONE && this.status === 401) {
+                        alert("Unauthorized Action.");
+                    }
+                }
+                const formdata = new FormData();
+                formdata.append("id", user.id);
+                deleteUserRequest.send(formdata);
             });
         });
     }
