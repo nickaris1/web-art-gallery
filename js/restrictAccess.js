@@ -9,7 +9,9 @@ filelist = [
     "/.vscode/*", 
     "/js/*", 
     "/server.js",
-    "/db/*"
+    "/db/*",
+    "Dockerfile",
+    ".dockerignore"
 ];
 
 filelist.forEach(element => {

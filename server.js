@@ -16,78 +16,20 @@ app.use(cookieParser());
 
 // app.use(session({secret: "dGhpc2lzbXlzZWNyZXRrZXl1ZnVjayE9"}));
 
-let posts = require("./js/post.js");
+const restrictAccess = require("./js/restrictAccess");
+app.use("/", restrictAccess);
+
+const gets = require("./js/get.js");
+app.use("/", gets);
+
+
+const posts = require("./js/post.js");
 app.use("/", posts);
 
 
 app.use(function (req, res, next) {
-    // const cookie = req.cookies.data;
-    // if (cookie === undefined) {
-
-    // } else {
-    //     const decode = Buffer.from(cookie, 'base64').toString('utf-8');
-    //     console.log(JSON.parse(decode));
-    // }
-    next(); // <-- important!
+    next();
 });
-
-app.get("/login.html", (req, res, next) => {
-    if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
-        next();
-    } else {
-        res.redirect("./index.html");
-    }
-});
-
-app.get("/verify", (req, res, next) => {
-    if (CookieVerifier.verifyCookieLogin(req.cookies.data)) {
-        if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
-            res.sendStatus(202);
-            return;
-        } else {
-            res.sendStatus(200);
-            return;
-        }
-    }
-    res.sendStatus(401);
-});
-
-app.get("/dashboard.html", (req, res, next) => {
-    if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
-        res.sendFile(path.join(__dirname, "/src/dashboard.html"));
-        return;
-    }
-    res.sendStatus(401);
-});
-
-app.get("/logout.html", (req, res, next) => {
-    res.clearCookie("data");
-    res.redirect("./index.html");
-});
-
-
-app.get("/getArtist", (req, res) => {
-    databaseAccess.getArtists((rows) => {
-        res.status(200).send(JSON.stringify(rows));
-    });
-});
-
-app.get("/getUsers", (req, res) => {
-    if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
-        databaseAccess.getUsers((rows) => {
-            res.status(200).send(JSON.stringify(rows));
-        });
-    }
-});
-
-app.get("/getCollection", (req, res) => {
-    databaseAccess.getCollections((rows) => {
-        res.status(200).send(JSON.stringify(rows));
-    });
-});
-
-const restrictAccess = require("./js/restrictAccess");
-app.use("/", restrictAccess);
 
 app.use(express.static('./'));
 app.use(express.static('./src'));
