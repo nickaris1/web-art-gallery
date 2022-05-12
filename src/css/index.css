@@ -19,6 +19,7 @@ body {
     align-items: baseline;
     flex-wrap: wrap;
     flex-direction: row;
+    line-height: 1.5em;
 
     border:solid black 5px;
     margin: 0px;
@@ -30,7 +31,7 @@ body {
 
 .Header h1 {
     color: white;
-    flex-grow: 2;   
+    flex-grow: 2 
 }
 
 .Header h3, .Header a {
