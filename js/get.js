@@ -67,5 +67,11 @@ app.get("/getCollection", (req, res) => {
     });
 });
 
+app.get("/getEvents", (req, res) => {
+    databaseAccess.getEvents((rows) => {
+        res.status(200).send(JSON.stringify(rows));
+    })
+});
+
 
 module.exports = app;

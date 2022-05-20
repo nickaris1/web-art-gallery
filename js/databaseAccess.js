@@ -278,6 +278,21 @@ exports.addEvent = function (eventData, callback) {
     });
 }
 
+/**
+ * 
+ * @param {function} callback {} => if user not found, userdata in json if user is found
+ */
+ exports.getEvents = function (callback) {
+    global.db.all("SELECT * FROM 'EVENT'", (error, rows) => {
+        if (error) {
+            console.log(error);
+            callback({});
+        } else {
+            callback(rows);
+        }
+    });
+}
+
 
 /**
  * Add Exhibits entry to db
