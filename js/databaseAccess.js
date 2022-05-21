@@ -2,6 +2,10 @@ const { createHash } = require("crypto");
 const res = require("express/lib/response");
 const sqlite3 = require("sqlite3");
 
+const log4js = require("log4js");
+const logger = log4js.getLogger("[DatabaseAccess]");
+logger.level = global.LOGGERLEVEL; 
+
 /**
  * 
  * @param {string} string string to hash
@@ -19,12 +23,12 @@ exports.hash = function (string) {
 exports.getUser = function (userEmail, callback) {
     global.db.all("SELECT * FROM 'USER' WHERE email == ?", [userEmail], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         }
         if (rows.length > 1) {
             callback({});
-            console.log("SELECT * FROM 'USER' WHERE email == ?", [userEmail]);
+            logger.warn("SELECT * FROM 'USER' WHERE email == ?", [userEmail]);
         } else {
             callback(rows[0]);
         }
@@ -38,7 +42,7 @@ exports.getUser = function (userEmail, callback) {
 exports.getUsers = function (callback) {
     global.db.all("SELECT * FROM 'USER'", (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows);
@@ -56,7 +60,7 @@ exports.addUser = function (userdata, callback) {
         if (dbUserData === undefined || dbUserData === {}) {
             global.db.all("INSERT INTO USER ('Email', 'Name', 'Phone', 'PasswordHash') VALUES (?, ?, ?, ?)", [userdata.email.trim(), userdata.name.trim(), userdata.phone, this.hash(userdata.pass.trim())], (error, rows) => {
                 if (error) {
-                    console.log(error);
+                    logger.error(error);
                     callback(0);
                 }
                 callback(200);
@@ -76,7 +80,7 @@ exports.deleteUser = function (userid, callback) {
     if (userid != 1) {
         global.db.all("DELETE FROM USER where id=?", [userid], (error, rows) => {
             if (error) {
-                console.log(error);
+                logger.error(error);
                 callback(0);
             } else {
                 callback(200);
@@ -96,7 +100,7 @@ exports.deleteUser = function (userid, callback) {
 exports.addArtist = function (artistName, callback) {
     global.db.all("INSERT INTO ARTIST ('name') VALUES (?)", [artistName.trim()], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback(0);
         }
         callback(200);
@@ -110,7 +114,7 @@ exports.addArtist = function (artistName, callback) {
 exports.getArtists = function (callback) {
     global.db.all("SELECT * FROM 'ARTIST'", (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows);
@@ -125,7 +129,7 @@ exports.getArtists = function (callback) {
 exports.getArtist = function (artistName, callback) {
     global.db.all("SELECT * FROM 'ARTIST' where name=?", [artistName], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows[0]);
@@ -143,8 +147,8 @@ exports.addCollection = function (collectionData, callback) {
         if (artistData != undefined) {
             global.db.all("INSERT INTO COLLECTION ('Name', 'Description', 'ArtistID') VALUES (?, ?, ?)", [collectionData.name.trim(), collectionData.description.trim(), artistData.id], (error, rows) => {
                 if (error) {
-                    console.log(error);
-                    console.log("INSERT INTO COLLECTION ('Name', 'Description', 'ArtistID') VALUES (?, ?, ?)", [collectionData.name.trim(), collectionData.description.trim(), artistData.id])
+                    logger.error(error);
+                    logger.error("INSERT INTO COLLECTION ('Name', 'Description', 'ArtistID') VALUES (?, ?, ?)", [collectionData.name.trim(), collectionData.description.trim(), artistData.id])
                     callback(0);
                 } else {
                     callback(200);
@@ -163,7 +167,7 @@ exports.addCollection = function (collectionData, callback) {
 exports.getCollections = function (callback) {
     global.db.all("SELECT * FROM 'COLLECTION'", (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows);
@@ -178,7 +182,7 @@ exports.getCollections = function (callback) {
 exports.getCollection = function (collectionName, callback) {
     global.db.all("SELECT * FROM 'COLLECTION' where name=?", [collectionName], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows[0]);
@@ -193,10 +197,10 @@ exports.getCollection = function (collectionName, callback) {
  * @param {function} callback 
  */
 exports.getImage = function (imageName, imagePath, callback) {
-    console.log(imagePath);
+    logger.info(`Get Image| name: ${imageName}, path: ${imagePath}`);
     global.db.all("SELECT * FROM 'IMAGE' where Name=?", [imageName], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows[0]);
@@ -217,7 +221,7 @@ exports.addImage = function (imageData, callback) {
                 if (collectionData != undefined) {
                     global.db.all("INSERT INTO IMAGE ('Name', 'Src_path', 'Description', 'CollectionID') VALUES (?, ?, ?, ?)", [imageData.name.trim(), imageData.srcPath.trim(), imageData.description.trim(), collectionData.id], (error, rows) => {
                         if (error) {
-                            console.log(error);
+                            logger.error(error);
                             callback(0);
                         } else {
                             callback(200);
@@ -241,13 +245,13 @@ exports.addImage = function (imageData, callback) {
 exports.addEvent = function (eventData, callback) {
     global.db.all("INSERT INTO EVENT ('Address', 'StartDate', 'EndDate', 'MaxTickets') VALUES (?, ?, ?, ?)", [eventData.address, eventData.startDate, eventData.endDate, eventData.maxTickets], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback(0);
         } else {
             // Get last Event id
             global.db.all("Select * from EVENT", (error, rows) => {
                 if (error) {
-                    console.log(error);
+                    logger.error(error);
                     callback(0);
                 } else {
                     // Add entries to EXHIBITS
@@ -268,7 +272,7 @@ exports.addEvent = function (eventData, callback) {
                                     return;
                                 });
                             });
-                            
+
                         });
                     }
                 }
@@ -280,15 +284,30 @@ exports.addEvent = function (eventData, callback) {
 
 /**
  * 
- * @param {function} callback {} => if user not found, userdata in json if user is found
+ * @param {function} callback {} => if evemt not found, eventRows in json if user is found
  */
- exports.getEvents = function (callback) {
+exports.getEvents = function (callback) {
     global.db.all("SELECT * FROM 'EVENT'", (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback({});
         } else {
             callback(rows);
+        }
+    });
+}
+
+/**
+ * @param {number} eventId id of event that the ticket is for
+ * @param {function} callback 0 => if user not found, userdata in json if user is found
+ */
+exports.getTicketActiveReservations = function (eventId, callback) {
+    global.db.all("SELECT count(*) as count FROM 'TICKET' where EventId=? and \"Active\"=\"1\"", [eventId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback(0);
+        } else {
+            callback(rows[0].count);
         }
     });
 }
@@ -302,7 +321,7 @@ exports.addEvent = function (eventData, callback) {
 exports.addExhibition = function (exhibitsData, callback) {
     global.db.all("INSERT INTO EXHIBITS ('EventID', 'CollectionID') VALUES (?, ?)", [exhibitsData.eventId, exhibitsData.collectionId], (error, rows) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
             callback(0);
         } else {
             callback(200);

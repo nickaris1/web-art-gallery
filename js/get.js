@@ -9,7 +9,9 @@ const databaseAccess = require('./databaseAccess');
 
 const app = express();
 
-
+const log4js = require("log4js");
+const logger = log4js.getLogger("[Server Get]");
+logger.level = global.LOGGERLEVEL;
 
 
 app.get("/login.html", (req, res, next) => {
@@ -69,7 +71,22 @@ app.get("/getCollection", (req, res) => {
 
 app.get("/getEvents", (req, res) => {
     databaseAccess.getEvents((rows) => {
-        res.status(200).send(JSON.stringify(rows));
+        const promises = [];
+        rows.forEach((row, index, arr) => {
+            promises.push(
+                new Promise((resolve) => {
+                    databaseAccess.getTicketActiveReservations(row.id, (reservedTicketsCount) => {
+                        arr[index].reservedTickets = reservedTicketsCount;
+                        resolve(1);
+                    });
+                })
+            )
+        });
+
+        Promise.all(promises).then(() => {
+            logger.debug(rows);
+            res.status(200).send(JSON.stringify(rows));
+        });
     })
 });
 

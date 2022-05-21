@@ -1,3 +1,4 @@
+global.LOGGERLEVEL = "debug" || process.argv[2];
 const express = require("express");
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
@@ -5,7 +6,6 @@ const path = require("path");
 const sqlite3 = require("sqlite3");
 const CookieVerifier = require("./js/verify.js");
 const databaseAccess = require("./js/databaseAccess");
-
 
 
 const app = express();
