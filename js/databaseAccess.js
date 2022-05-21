@@ -4,7 +4,7 @@ const sqlite3 = require("sqlite3");
 
 const log4js = require("log4js");
 const logger = log4js.getLogger("[DatabaseAccess]");
-logger.level = global.LOGGERLEVEL; 
+logger.level = global.LOGGERLEVEL;
 
 /**
  * 
@@ -20,7 +20,7 @@ exports.hash = function (string) {
  * @param {string} userEmail user email to check if exists in db
  * @param {function} callback {} => if user not found, userdata in json if user is found
  */
-exports.getUser = function (userEmail, callback) {
+exports.getUserById = function (userEmail, callback) {
     global.db.all("SELECT * FROM 'USER' WHERE email == ?", [userEmail], (error, rows) => {
         if (error) {
             logger.error(error);
@@ -126,7 +126,7 @@ exports.getArtists = function (callback) {
  * @param {string} artistName
  * @param {function} callback 
  */
-exports.getArtist = function (artistName, callback) {
+exports.getArtistByName = function (artistName, callback) {
     global.db.all("SELECT * FROM 'ARTIST' where name=?", [artistName], (error, rows) => {
         if (error) {
             logger.error(error);
@@ -143,7 +143,7 @@ exports.getArtist = function (artistName, callback) {
  * @param {function} callback callback function 0 => error, 200 => OK
  */
 exports.addCollection = function (collectionData, callback) {
-    this.getArtist(collectionData.artist.trim(), (artistData) => {
+    this.getArtistByName(collectionData.artist.trim(), (artistData) => {
         if (artistData != undefined) {
             global.db.all("INSERT INTO COLLECTION ('Name', 'Description', 'ArtistID') VALUES (?, ?, ?)", [collectionData.name.trim(), collectionData.description.trim(), artistData.id], (error, rows) => {
                 if (error) {
@@ -179,7 +179,7 @@ exports.getCollections = function (callback) {
  * @param {string} collectionName
  * @param {function} callback 
  */
-exports.getCollection = function (collectionName, callback) {
+exports.getCollectionByName = function (collectionName, callback) {
     global.db.all("SELECT * FROM 'COLLECTION' where name=?", [collectionName], (error, rows) => {
         if (error) {
             logger.error(error);
@@ -217,7 +217,7 @@ exports.getImage = function (imageName, imagePath, callback) {
 exports.addImage = function (imageData, callback) {
     this.getImage(imageData.name, imageData.srcPath, (status) => {
         if (status === undefined) {
-            this.getCollection(imageData.collection.trim(), (collectionData) => {
+            this.getCollectionByName(imageData.collection.trim(), (collectionData) => {
                 if (collectionData != undefined) {
                     global.db.all("INSERT INTO IMAGE ('Name', 'Src_path', 'Description', 'CollectionID') VALUES (?, ?, ?, ?)", [imageData.name.trim(), imageData.srcPath.trim(), imageData.description.trim(), collectionData.id], (error, rows) => {
                         if (error) {
@@ -240,7 +240,7 @@ exports.addImage = function (imageData, callback) {
 /**
  * Add Event entry to db
  * @param {object} eventData 
- * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
+ * @param {function} callback callback function 0 => error, 200 => OK, 1 => event exist
  */
 exports.addEvent = function (eventData, callback) {
     global.db.all("INSERT INTO EVENT ('Address', 'StartDate', 'EndDate', 'MaxTickets') VALUES (?, ?, ?, ?)", [eventData.address, eventData.startDate, eventData.endDate, eventData.maxTickets], (error, rows) => {
@@ -256,7 +256,7 @@ exports.addEvent = function (eventData, callback) {
                 } else {
                     // Add entries to EXHIBITS
                     if (typeof eventData.collections === "string") {
-                        this.getCollection(eventData.collections, (row) => {
+                        this.getCollectionByName(eventData.collections, (row) => {
                             this.addExhibition({ collectionId: row.id, eventId: rows[rows.length - 1].id }, (status) => {
                                 if (status === 200) {
                                     callback(200);
@@ -267,7 +267,7 @@ exports.addEvent = function (eventData, callback) {
                         });
                     } else {
                         eventData.collections.forEach(collection => {
-                            this.getCollection(collection, (row) => {
+                            this.getCollectionByName(collection, (row) => {
                                 this.addExhibition({ collectionId: row.id, eventId: rows[rows.length - 1].id }, (status) => {
                                     return;
                                 });
@@ -298,6 +298,55 @@ exports.getEvents = function (callback) {
 }
 
 /**
+ * @param {number} eventId 
+ * @param {function} callback {} => if evemt not found, eventRows in json if user is found
+ */
+exports.getEventById = function (eventId, callback) {
+    global.db.all("SELECT * FROM 'EVENT' where id=?", [eventId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows);
+        }
+    });
+}
+
+
+
+
+/**
+ * 
+ * @param {function} callback {} => if evemt not found, eventRows in json if user is found
+ */
+exports.getAvailableEvents = function (callback) {
+    global.db.all("SELECT * FROM 'EVENT' where EndDate > DATE('now')", (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows);
+        }
+    });
+}
+
+/**
+ * @param {number} eventId 
+ * @param {function} callback {} => if evemt not found, eventRows in json if user is found
+ */
+exports.getEventStatusById = function (eventId, callback) {
+    global.db.all("SELECT * FROM 'EVENT' where id=? and EndDate > DATE('now')", [eventId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback(false);
+        } else {
+            callback(true);
+        }
+    });
+}
+
+
+/**
  * @param {number} eventId id of event that the ticket is for
  * @param {function} callback 0 => if user not found, userdata in json if user is found
  */
@@ -312,6 +361,74 @@ exports.getTicketActiveReservations = function (eventId, callback) {
     });
 }
 
+/**
+ * @param {number} eventId id of user that the ticket is for
+ * @param {number} userId id of event that the ticket is for
+ * @param {function} callback 0 => if user not found, userdata in json if user is found
+ */
+exports.getIfUserHasTicketForEvent = function (eventId, userId, callback) {
+    global.db.all("SELECT count(*) as count FROM 'TICKET' where EventId=? and \"Active\"=\"1\" and PersonID=?", [eventId, userId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback(0);
+        } else {
+            callback(rows[0].count);
+        }
+    });
+}
+
+/**
+ * @param {number} eventId id of user that the ticket is for
+ * @param {number} userId id of event that the ticket is for
+ * @param {function} callback callback function 0 => error, 200 => OK
+ */
+exports.addTicket = function (eventId, userId, callback) {
+    const date = (new Date(Date.now())).toISOString();
+    global.db.all("INSERT INTO TICKET ('ReservationDate', 'PersonID', 'EventID') VALUES (?, ?, ?)", [date, userId, eventId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback(0);
+        } else {
+            callback(200);
+        }
+    });
+}
+
+
+/**
+ * @param {number} eventId id of user that the ticket is for
+ * @param {number} userId id of event that the ticket is for
+ * @param {function} callback callback function rows
+ */
+ exports.getActiveTicketFromEidUid = function (eventId, userId, callback) {
+    global.db.all("SELECT * FROM 'TICKET' where EventId=? and \"Active\"=\"1\" and PersonID=?", [eventId, userId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows);
+        }
+    });
+}
+
+/**
+ * @param {number} eventId id of user that the ticket is for
+ * @param {number} userId id of event that the ticket is for
+ * @param {function} callback callback function 0 => error, 200 => OK
+ */
+ exports.cancelTicket = function (eventId, userId, callback) {
+    this.getActiveTicketFromEidUid(eventId, userId, (rows) => {
+        const ticketId = rows[0].id;
+        global.db.all("UPDATE TICKET SET 'Active'='0' WHERE id=?", [ticketId], (error) => {
+            if (error) {
+                logger.error(error);
+                callback(0);
+            } else {
+                callback(200);
+            }
+        });
+    });
+}
 
 /**
  * Add Exhibits entry to db

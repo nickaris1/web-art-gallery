@@ -70,21 +70,29 @@ app.get("/getCollection", (req, res) => {
 });
 
 app.get("/getEvents", (req, res) => {
-    databaseAccess.getEvents((rows) => {
+    databaseAccess.getAvailableEvents((rows) => {
         const promises = [];
         rows.forEach((row, index, arr) => {
-            promises.push(
-                new Promise((resolve) => {
-                    databaseAccess.getTicketActiveReservations(row.id, (reservedTicketsCount) => {
-                        arr[index].reservedTickets = reservedTicketsCount;
+            promises.push(new Promise((resolve) => {
+                databaseAccess.getTicketActiveReservations(row.id, (reservedTicketsCount) => {
+                    arr[index].reservedTickets = reservedTicketsCount;
+                    resolve(1);
+                });
+            }));
+
+            // Get if user has reserved a ticket
+            if (CookieVerifier.verifyCookieLogin(req.cookies.data)) {
+                promises.push(new Promise((resolve) => {
+                    databaseAccess.getIfUserHasTicketForEvent(row.id, CookieVerifier.getUserId(req.cookies.data), (isReserved) => {
+                        arr[index].isReserved = isReserved;
                         resolve(1);
                     });
-                })
-            )
+                }));
+            }
         });
 
         Promise.all(promises).then(() => {
-            logger.debug(rows);
+            // logger.debug(rows);
             res.status(200).send(JSON.stringify(rows));
         });
     })

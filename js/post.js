@@ -18,7 +18,7 @@ app.post("/login", (req, res, next) => {
             return Buffer.from(str_json).toString('base64');
         }
 
-        databaseAccess.getUser(req.body.email, (userdata) => {
+        databaseAccess.getUserById(req.body.email, (userdata) => {
             if (userdata === {}) {
                 console.log("Reported IP" + req.ip);
                 res.sendStatus(403);
@@ -127,15 +127,15 @@ app.post('/addArtist', upload.none(), (req, res) => {
                 } else {
                     res.sendStatus(404);
                 }
-            } catch(e) {
-                    
+            } catch (e) {
+
             }
         });
     }
 });
 
 app.post('/addEvent', upload.none(), (req, res) => {
-    if (!CookieVerifier.verifyCookieAdmin(req.cookies.data)) { 
+    if (!CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
         res.sendStatus(401);
         return;
     }
@@ -181,5 +181,52 @@ app.post("/deleteUser", upload.none(), (req, res) => {
         res.sendStatus(401);
     }
 });
+
+app.post("/reserveEvent", upload.none(), (req, res) => {
+    eventReservation(req, (isReserved) => {
+        if(!isReserved) {
+            databaseAccess.addTicket(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (status) => {
+                if (status === 200) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(401);
+                }
+            });
+        }
+    });
+});
+
+app.post("/cancelEvent", upload.none(), (req, res) => {
+    eventReservation(req, (isReserved) => {
+        if(isReserved) {
+            databaseAccess.cancelTicket(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (status) => {
+                if (status === 200) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(401);
+                }
+            });
+        }
+    });
+});
+
+function eventReservation(req, callback) {
+    if (CookieVerifier.verifyCookieLogin(req.cookies.data) && typeof parseInt(req.body.EventId) === "number") {
+        // check if event has ended
+        databaseAccess.getEventStatusById(req.body.EventId, (eventStatus) => {
+            if (eventStatus) {
+                // Check if user already have ticket for that event;
+                databaseAccess.getIfUserHasTicketForEvent(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (isReserved) => {
+                    callback(isReserved);
+                });
+            } else {
+                res.sendStatus(401);
+            }
+        });
+    } else {
+        res.sendStatus(401);
+    }
+}
+
 
 module.exports = app;

@@ -1,6 +1,6 @@
 verifier();
 
-function httpGet(ulr) {
+function verifyUser(ulr) {
     return new Promise(resstatus => {
         let xmlHttp = new XMLHttpRequest();
 
@@ -18,7 +18,7 @@ function httpGet(ulr) {
 async function verifier() {
     const loginBtn = document.querySelector("#id_loginBtn");
 
-    const response_code = await httpGet("/verify");
+    const response_code = await verifyUser("/verify");
 
     if (response_code === 200 || response_code === 202) {
         loginBtn.innerHTML = "log out";

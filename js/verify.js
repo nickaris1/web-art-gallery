@@ -16,3 +16,11 @@ exports.verifyCookieLogin = function(cookieVal) {
     }
     return false;
 }
+
+exports.getUserId = function (cookieVal) {
+    if (cookieVal != undefined) {
+        const data = JSON.parse(Buffer.from(cookieVal, 'base64').toString('utf-8'));
+        return data.id;
+    }
+    return -1;
+}
