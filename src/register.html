@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="login.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Login</title>
@@ -22,21 +21,29 @@
       
                       <p class="text-center h3 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
       
-                      <form class="mx-auto" action="src/register.js" method="post">
+                      <form id="id_registerForm" class="mx-auto" action="/register" method="post">
       
                         <div class="d-flex flex-row align-items-center mb-4">
                           <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                           <div class="form-outline flex-fill mb-0">
                               <label class="form-label" for="id_name">Your Name</label>
-                            <input type="text" id="id_name" class="form-control" />
+                            <input name="name" type="text" id="id_name" class="form-control" required>
                           </div>
                         </div>
       
                         <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                              <label class="form-label" for="id_password">Phone</label>
+                            <input name="phone" type="number" id="id_phone" class="form-control" required pattern="[0-9]{10}">
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
                           <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                           <div class="form-outline flex-fill mb-0">
                               <label class="form-label" for="id_email">Your Email</label>
-                            <input type="email" id="id_email" class="form-control" />
+                            <input name="email" type="email" id="id_email" class="form-control" required>
                           </div>
                         </div>
       
@@ -44,7 +51,7 @@
                           <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                           <div class="form-outline flex-fill mb-0">
                               <label class="form-label" for="id_password">Password</label>
-                            <input type="password" id="id_password" class="form-control" />
+                            <input name="pass" type="password" id="id_password" class="form-control" required>
                           </div>
                         </div>
       
@@ -52,7 +59,7 @@
                           <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                           <div class="form-outline flex-fill mb-0">
                               <label class="form-label" for="id_password_repeat">Repeat your password</label>
-                            <input type="password" id="id_password_repeat" class="form-control" />
+                            <input name="pass_repeat" type="password" id="id_passwordRepeat" class="form-control" />
                           </div>
                         </div>
       
@@ -72,5 +79,6 @@
         </div>
       </section>
       
-</body>
+      <script src="/src/js/register.js"></script>
+    </body>
 </html>

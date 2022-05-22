@@ -1,0 +1,85 @@
+body {
+    margin: 0px;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    padding-right: 100px;
+}
+
+/* Header Section */
+
+.Header {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 255, 1));
+    width:100%;
+    height: 50px;
+
+    position: fixed;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    border:solid black 5px;
+    margin: 0px;
+    padding-top: 15px;
+    padding-left: 10px;
+    padding-bottom: 15px;
+    z-index: 1;
+}
+
+.Header h1 {
+    color: white;
+    flex-grow: 2;   
+}
+
+.Header h3, .Header a {
+    color:white;
+    flex-grow: 1;
+}
+
+.Header a:hover {
+    color: orange;
+}
+
+.page {
+    position: absolute;
+    top: 90px;
+    width: 100%;
+}
+
+.page > * {
+    margin: 0px 30px 30px 30px;
+}
+
+.submitButton {
+    width:auto;
+    height: 30px;
+    border-radius: 30px;
+    border: 1px solid black;
+}
+
+ul {
+    border: 3px solid black;
+    border-radius: 3px;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+li p {
+    display: inline-block;
+}
+
+#id_collectionListSelect {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
