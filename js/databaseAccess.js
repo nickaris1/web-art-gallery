@@ -242,13 +242,13 @@ exports.addImage = function (imageData, callback) {
  * @param {number} collecitonId 
  * @param {function} callback 
  */
-exports.getImagesInCollection = function (collecitonId, callback) {
-    global.db.all("SELECT * FROM 'COLLECTION' AS c, 'IMAGE' as i WHERE c.id=? and c.id=i.CollectionID", [collectionName], (error, rows) => {
+exports.getImagesInCollection = function (collectionId, callback) {
+    global.db.all("SELECT * FROM 'COLLECTION' AS c, 'IMAGE' as i WHERE c.id=? and c.id=i.CollectionID", [collectionId], (error, rows) => {
         if (error) {
             logger.error(error);
             callback({});
         } else {
-            callback(rows[0]);
+            callback(rows);
         }
     });
 }

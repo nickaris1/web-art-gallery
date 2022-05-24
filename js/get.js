@@ -14,7 +14,7 @@ const logger = log4js.getLogger("[Server Get]");
 logger.level = global.LOGGERLEVEL;
 
 
-app.get("/api/login.html", (req, res, next) => {
+app.get("/login.html", (req, res, next) => {
     if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
         next();
     } else {
@@ -98,5 +98,14 @@ app.get("/api/getEvents", (req, res) => {
     })
 });
 
+app.get("/api/imagesForCollection", (req, res) => {
+    if (req.query.id != undefined) {
+        databaseAccess.getImagesInCollection(req.query.id, (rows) => {
+            res.status(200).send(rows);
+        });
+    } else {
+        res.sendStatus(400);
+    }
+});
 
 module.exports = app;
