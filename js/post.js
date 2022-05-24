@@ -10,7 +10,7 @@ const databaseAccess = require('./databaseAccess');
 const app = express();
 
 //Login api request
-app.post("/login", (req, res, next) => {
+app.post("/api/login", (req, res, next) => {
     const cookie = req.cookies.data; // get data cookie
     if (cookie === undefined && typeof req.body.email === "string" && typeof req.body.email === "string") {
         const cookieFunc = function (userdata) {
@@ -73,7 +73,7 @@ const single_upload = multer({
     },
 }).array('file', 1);
 
-app.post('/upload', (req, res) => {
+app.post('/api/upload', (req, res) => {
     single_upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             // A Multer error occurred when uploading.
@@ -118,7 +118,7 @@ app.post('/addCollection', upload.none(), (req, res) => {
     });
 });
 
-app.post('/addArtist', upload.none(), (req, res) => {
+app.post('/api/addArtist', upload.none(), (req, res) => {
     if (typeof req.body.name === "string") {
         databaseAccess.addArtist(req.body.name, (status) => {
             try {
@@ -134,7 +134,7 @@ app.post('/addArtist', upload.none(), (req, res) => {
     }
 });
 
-app.post('/addEvent', upload.none(), (req, res) => {
+app.post('/api/addEvent', upload.none(), (req, res) => {
     if (!CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
         res.sendStatus(401);
         return;
@@ -156,7 +156,7 @@ app.post('/addEvent', upload.none(), (req, res) => {
 });
 
 // Register api request
-app.post("/register", bodyParser.json(), (req, res, next) => {
+app.post("/api/register", bodyParser.json(), (req, res, next) => {
     if (req.body.email != undefined) {
         databaseAccess.addUser(req.body, (status) => {
             if (status === 200) {
@@ -168,7 +168,7 @@ app.post("/register", bodyParser.json(), (req, res, next) => {
     }
 });
 
-app.post("/deleteUser", upload.none(), (req, res) => {
+app.post("/api/deleteUser", upload.none(), (req, res) => {
     if (CookieVerifier.verifyCookieAdmin(req.cookies.data) && typeof parseInt(req.body.id) === "number") {
         databaseAccess.deleteUser(parseInt(req.body.id), (status) => {
             if (status === 200) {
@@ -182,7 +182,7 @@ app.post("/deleteUser", upload.none(), (req, res) => {
     }
 });
 
-app.post("/reserveEvent", upload.none(), (req, res) => {
+app.post("/api/reserveEvent", upload.none(), (req, res) => {
     eventReservation(req, (isReserved) => {
         if(!isReserved) {
             databaseAccess.addTicket(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (status) => {
@@ -196,7 +196,7 @@ app.post("/reserveEvent", upload.none(), (req, res) => {
     });
 });
 
-app.post("/cancelEvent", upload.none(), (req, res) => {
+app.post("/api/cancelEvent", upload.none(), (req, res) => {
     eventReservation(req, (isReserved) => {
         if(isReserved) {
             databaseAccess.cancelTicket(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (status) => {

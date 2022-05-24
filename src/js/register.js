@@ -6,7 +6,7 @@ registerForm.onsubmit = function(event) {
     event.preventDefault();
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/register", true);
+    xhr.open("POST", "/api/register", true);
     xhr.onreadystatechange = function() { // Call a function when the state changes.
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             window.location.replace("/login.html");

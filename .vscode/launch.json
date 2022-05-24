@@ -14,14 +14,9 @@
             "internalConsoleOptions": "neverOpen"
           },
           {
-            "name": "Docker: Attach to Node",
-            "type": "node",
-            "request": "attach",
-            "port": 9229,
-            "address": "localhost",
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "/usr/src/app",
-            "protocol": "inspector"
+            "name": "Launch index.html",
+            "type": "firefox",
+            "request": "attach"
         }
     ]
 }

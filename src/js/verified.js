@@ -18,14 +18,14 @@ function verifyUser(ulr) {
 async function verifier() {
     const loginBtn = document.querySelector("#id_loginBtn");
 
-    const response_code = await verifyUser("/verify");
+    const response_code = await verifyUser("/api/verify");
 
     if (response_code === 200 || response_code === 202) {
         loginBtn.innerHTML = "log out";
         loginBtn.setAttribute("href", "/logout.html");
     } else {
         loginBtn.innerHTML = "login";
-        loginBtn.setAttribute("href", "/login.html");
+        loginBtn.setAttribute("href", "/api/login.html");
     }
 
     const dashboardBtn = document.querySelector("#id_dashboardBtn");

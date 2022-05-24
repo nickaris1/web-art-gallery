@@ -5,7 +5,7 @@ createEventList();
 
 function createEventList() {
     const xhrEventList = new XMLHttpRequest();
-    xhrEventList.open("GET", "/getEvents", true);
+    xhrEventList.open("GET", "/api/getEvents", true);
     xhrEventList.onreadystatechange = function () {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             eventList.innerHTML = "";
@@ -71,10 +71,10 @@ function createEventList() {
 }
 
 async function reserveListener(eventId) {
-    const responseCode = await verifyUser("/verify")
+    const responseCode = await verifyUser("/api/verify")
     if (responseCode === 200 || responseCode === 202) {
         const reserveRequest = new XMLHttpRequest();
-        reserveRequest.open("POST", "/reserveEvent", true);
+        reserveRequest.open("POST", "/api/reserveEvent", true);
         reserveRequest.onreadystatechange = function () {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 createEventList();
@@ -87,10 +87,10 @@ async function reserveListener(eventId) {
 }
 
 async function cancelListener(eventId) {
-    const responseCode = await verifyUser("/verify")
+    const responseCode = await verifyUser("/api/verify")
     if (responseCode === 200 || responseCode === 202) {
         const reserveRequest = new XMLHttpRequest();
-        reserveRequest.open("POST", "/cancelEvent", true);
+        reserveRequest.open("POST", "/api/cancelEvent", true);
         reserveRequest.onreadystatechange = function () {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 createEventList();

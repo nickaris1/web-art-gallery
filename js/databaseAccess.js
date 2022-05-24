@@ -238,6 +238,22 @@ exports.addImage = function (imageData, callback) {
 }
 
 /**
+ * 
+ * @param {number} collecitonId 
+ * @param {function} callback 
+ */
+exports.getImagesInCollection = function (collecitonId, callback) {
+    global.db.all("SELECT * FROM 'COLLECTION' AS c, 'IMAGE' as i WHERE c.id=? and c.id=i.CollectionID", [collectionName], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows[0]);
+        }
+    });
+}
+
+/**
  * Add Event entry to db
  * @param {object} eventData 
  * @param {function} callback callback function 0 => error, 200 => OK, 1 => event exist
@@ -311,9 +327,6 @@ exports.getEventById = function (eventId, callback) {
         }
     });
 }
-
-
-
 
 /**
  * 

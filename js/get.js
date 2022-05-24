@@ -14,7 +14,7 @@ const logger = log4js.getLogger("[Server Get]");
 logger.level = global.LOGGERLEVEL;
 
 
-app.get("/login.html", (req, res, next) => {
+app.get("/api/login.html", (req, res, next) => {
     if (!CookieVerifier.verifyCookieLogin(req.cookies.data)) {
         next();
     } else {
@@ -22,7 +22,7 @@ app.get("/login.html", (req, res, next) => {
     }
 });
 
-app.get("/verify", (req, res, next) => {
+app.get("/api/verify", (req, res, next) => {
     if (CookieVerifier.verifyCookieLogin(req.cookies.data)) {
         if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
             res.sendStatus(202);
@@ -49,13 +49,13 @@ app.get("/logout.html", (req, res, next) => {
 });
 
 
-app.get("/getArtist", (req, res) => {
+app.get("/api/getArtist", (req, res) => {
     databaseAccess.getArtists((rows) => {
         res.status(200).send(JSON.stringify(rows));
     });
 });
 
-app.get("/getUsers", (req, res) => {
+app.get("/api/getUsers", (req, res) => {
     if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
         databaseAccess.getUsers((rows) => {
             res.status(200).send(JSON.stringify(rows));
@@ -63,13 +63,13 @@ app.get("/getUsers", (req, res) => {
     }
 });
 
-app.get("/getCollection", (req, res) => {
+app.get("/api/getCollection", (req, res) => {
     databaseAccess.getCollections((rows) => {
         res.status(200).send(JSON.stringify(rows));
     });
 });
 
-app.get("/getEvents", (req, res) => {
+app.get("/api/getEvents", (req, res) => {
     databaseAccess.getAvailableEvents((rows) => {
         const promises = [];
         rows.forEach((row, index, arr) => {

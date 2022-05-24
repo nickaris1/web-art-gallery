@@ -3,7 +3,7 @@
 
 const artistSelect = document.querySelector("#id_artistSelect");
 const xhrArtistSelect = new XMLHttpRequest();
-xhrArtistSelect.open("GET", "/getArtist", true);
+xhrArtistSelect.open("GET", "/api/getArtist", true);
 xhrArtistSelect.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
@@ -23,7 +23,7 @@ const collectionSelect = document.querySelector("#id_collectionSelect");
 const collectionListEventSelect = document.querySelector("#id_collectionListSelect");
 
 const xhrCollectionSelect = new XMLHttpRequest();
-xhrCollectionSelect.open("GET", "/getCollection", true);
+xhrCollectionSelect.open("GET", "/api/getCollection", true);
 xhrCollectionSelect.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
@@ -60,7 +60,7 @@ xhrCollectionSelect.send();
 
 const userList = document.querySelector("#id_userList");
 const xhrUserList = new XMLHttpRequest();
-xhrUserList.open("GET", "/getUsers", true);
+xhrUserList.open("GET", "/api/getUsers", true);
 xhrUserList.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);
@@ -85,7 +85,7 @@ xhrUserList.onreadystatechange = function () {
             removeBtn.addEventListener('click', (event) => {
                 
                 const deleteUserRequest = new XMLHttpRequest();
-                deleteUserRequest.open("POST", "/deleteUser", true);
+                deleteUserRequest.open("POST", "/api/deleteUser", true);
                 deleteUserRequest.onreadystatechange = function () { // Call a function when the state changes.
                     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                         userList.removeChild(listItem);
@@ -115,7 +115,7 @@ const form_el = document.querySelector("#id_addImageForm");
 form_el.onsubmit = function (event) {
     event.preventDefault();
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/upload", true);
+    xhr.open("POST", "/api/upload", true);
 
     xhr.onreadystatechange = function () { // Call a function when the state changes.
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -137,7 +137,7 @@ const addArtistForm = document.querySelector("#id_addArtistForm");
 addArtistForm.onsubmit = function (event) {
     event.preventDefault();
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/addArtist", true);
+    xhr.open("POST", "/api/addArtist", true);
 
     xhr.onreadystatechange = function () { // Call a function when the state changes.
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -177,7 +177,7 @@ const addEventForm = document.querySelector("#id_addEventForm");
 addEventForm.onsubmit = function (event) {
     event.preventDefault();
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/addEvent", true);
+    xhr.open("POST", "/api/addEvent", true);
 
     xhr.onreadystatechange = function () { // Call a function when the state changes.
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
