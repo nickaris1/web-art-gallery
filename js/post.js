@@ -8,9 +8,10 @@ const process = require('process');
 const databaseAccess = require('./databaseAccess');
 
 const app = express();
+const upload = multer();
 
 //Login api request
-app.post("/api/login", (req, res, next) => {
+app.post("/api/login", upload.none(), (req, res, next) => {
     const cookie = req.cookies.data; // get data cookie
     if (cookie === undefined && typeof req.body.email === "string" && typeof req.body.email === "string") {
         const cookieFunc = function (userdata) {
@@ -30,7 +31,7 @@ app.post("/api/login", (req, res, next) => {
                         httpOnly: true
                     });
                     console.log('cookie created successfully');
-                    res.redirect("./index.html");
+                    res.sendStatus(200);
 
                 }
             } else {
@@ -107,7 +108,7 @@ app.post('/api/upload', (req, res) => {
 });
 
 
-const upload = multer();
+
 app.post('/addCollection', upload.none(), (req, res) => {
     databaseAccess.addCollection(req.body, (status) => {
         if (status === 200) {
