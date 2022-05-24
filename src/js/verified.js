@@ -25,7 +25,7 @@ async function verifier() {
         loginBtn.setAttribute("href", "/logout.html");
     } else {
         loginBtn.innerHTML = "login";
-        loginBtn.setAttribute("href", "/api/login.html");
+        loginBtn.setAttribute("href", "/login.html");
     }
 
     const dashboardBtn = document.querySelector("#id_dashboardBtn");
