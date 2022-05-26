@@ -69,7 +69,7 @@ app.get("/api/getCollection", (req, res) => {
     });
 });
 
-app.get("/api/getEvents", (req, res) => {
+app.get("/api/getAvailableEvents", (req, res) => {
     databaseAccess.getAvailableEvents((rows) => {
         const promises = [];
         rows.forEach((row, index, arr) => {
@@ -96,6 +96,22 @@ app.get("/api/getEvents", (req, res) => {
             res.status(200).send(JSON.stringify(rows));
         });
     })
+});
+
+app.get("/api/getEvents", (req, res) => {
+    databaseAccess.getEvents((rows) => {
+        res.status(200).send(JSON.stringify(rows));
+    });
+});
+
+app.get("/api/getEventCollection", (req, res) => {
+    if (req.query.id != undefined) {
+        databaseAccess.getCollectionsInEvent(req.query.id, (rows) => {
+            res.status(200).send(JSON.stringify(rows));
+        })
+    } else {
+        res.sendStatus(400);
+    }
 });
 
 app.get("/api/imagesForCollection", (req, res) => {

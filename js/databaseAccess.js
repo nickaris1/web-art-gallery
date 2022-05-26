@@ -409,8 +409,8 @@ exports.addTicket = function (eventId, userId, callback) {
 
 
 /**
- * @param {number} eventId id of user that the ticket is for
- * @param {number} userId id of event that the ticket is for
+ * @param {number} eventId id of event that the ticket is for
+ * @param {number} userId  id of user that the ticket is for
  * @param {function} callback callback function rows
  */
  exports.getActiveTicketFromEidUid = function (eventId, userId, callback) {
@@ -446,7 +446,7 @@ exports.addTicket = function (eventId, userId, callback) {
 /**
  * Add Exhibits entry to db
  * @param {object} exhibitsData 
- * @param {function} callback callback function 0 => error, 200 => OK, 1 => image exist
+ * @param {function} callback callback function
  */
 exports.addExhibition = function (exhibitsData, callback) {
     global.db.all("INSERT INTO EXHIBITS ('EventID', 'CollectionID') VALUES (?, ?)", [exhibitsData.eventId, exhibitsData.collectionId], (error, rows) => {
@@ -455,6 +455,21 @@ exports.addExhibition = function (exhibitsData, callback) {
             callback(0);
         } else {
             callback(200);
+        }
+    });
+}
+
+/**
+ * @param {number} eventId id of user that the ticket is for
+ * @param {function} callback callback function rows
+ */
+ exports.getCollectionsInEvent = function (eventId, callback) {
+    global.db.all("SELECT * FROM 'COLLECTION' as c, 'EXHIBITS' as ex, 'EVENT' as e where EventId=? and ex.CollectionID=c.id and ex.EventId=e.id", [eventId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows);
         }
     });
 }

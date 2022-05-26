@@ -5,7 +5,7 @@ createEventList();
 
 function createEventList() {
     const xhrEventList = new XMLHttpRequest();
-    xhrEventList.open("GET", "/api/getEvents", true);
+    xhrEventList.open("GET", "/api/getAvailableEvents", true);
     xhrEventList.onreadystatechange = function () {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             eventList.innerHTML = "";
