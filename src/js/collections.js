@@ -11,8 +11,14 @@ fetch("/api/getCollections").then((response) => {
         response.json().then((data) => {
             data.forEach(item => {
                 const newCollection = document.createElement("li");
-                newCollection.textContent = item.Name;
-                newCollection.collectionId = item.id;
+
+                const link = document.createElement("a");
+                link.textContent = item.Name;
+                link.collectionId = item.id;
+                link.addEventListener('click', (e) => {
+                    showCollection(item.id);
+                });
+                newCollection.appendChild(link);
                 collectionList.appendChild(newCollection);
 
             });
@@ -25,6 +31,12 @@ if (urlstr.includes('?')) {
     console.log('Parameterised URL');
     const url = new URL(urlstr);
     const id = url.searchParams.get("id");
+    showCollection(id);
+} else {
+    console.log('No Parameters in URL');
+}
+
+function showCollection(id) {
     fetch("/api/getCollectionById?id=" + id).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
@@ -65,11 +77,7 @@ if (urlstr.includes('?')) {
             });
         }
     }).catch(err => console.error);
-} else {
-    console.log('No Parameters in URL');
 }
-
-
 
 
 function imgActivate(e) {
