@@ -7,6 +7,7 @@
     <title>Patras Art Gallery</title>
     <link rel="stylesheet" href="/src/css/collections.css">
     <link rel="stylesheet" href="/src/css/header.css">
+    <link rel="stylesheet" href="/src/css/moreInfo.css">
 </head>
 
 <body>
@@ -21,21 +22,42 @@
     </div>
 
     <div class="page">
-        <div class="CollectionList">
-            <ul id="id_collectionList">
-            </ul>
-        </div>
-        
-        <div class="SelectedCollection">
-            <div id="collection_info">
-                <div id="collectionName"></div>
-                <div id="collectionDescription"></div>
-                <div id="artistName"></div>
+        <div class="content">
+            <div class="CollectionList">
+                <ul id="id_collectionList">
+                </ul>
             </div>
-            <div id="collectionImages">
+
+            <div class="SelectedCollection">
+                <div id="collection_info">
+                    <div id="collectionName"></div>
+                    <div id="collectionDescription"></div>
+                    <div id="artistName"></div>
+                </div>
+                <div id="collectionImages">
+                    <div id="panel-main">
+                        <!-- 1st photo of the images list -->
+                        <img src="" id="selected">
+                    </div>
+                    <div class="buttons">
+                        <input type="button" id="id_prev" value="Previous">
+                        <input type="button" id="id_next" value="Next">
+                    </div>
+                    <div id="id_descriptionPanel">
+                        <h3 id="id_ImageName">
+
+                        </h3>
+                        <div id="id_description">
+
+                        </div>
+                    </div>
+                    <div class="thumbnails">
+                    </div>
+                </div>
             </div>
         </div>
-        
+
+
         <div class="More_Info">
             <h2>Patras Art Gallery</h2>
             <span>
@@ -43,19 +65,19 @@
                 Address<br>
                 Email
             </span>
-    
+
             <span>
                 <h3>Social Media</h3>
                 Facebook<br>
                 Instagram
             </span>
-    
+
             <span>
                 <h3>Work with us</h3>
                 Support us<br>
                 Jobs
             </span>
-    
+
         </div>
     </div>
 

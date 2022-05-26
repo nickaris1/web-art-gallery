@@ -1,5 +1,10 @@
-
+const imageList = []
 const collectionList = document.querySelector("#id_collectionList");
+
+const descPanel = document.querySelector("#id_description");
+const selectedImg = document.querySelector("#selected");
+const imgName = document.querySelector("#id_ImageName")
+const thumbnails = document.querySelector(".thumbnails")
 
 fetch("/api/getCollections").then((response) => {
     if (response.status === 200) {
@@ -29,10 +34,67 @@ if (urlstr.includes('?')) {
                     artistRes.json().then((artistData) => {
                         document.querySelector("#artistName").textContent = "Artist Name: " + artistData.Name;
                     });
-                }).catch(err=>console.error);
+                }).catch(err => console.error);
+
+                fetch("/api/imagesForCollection?id=" + id).then((imgResponse) => {
+                    imgResponse.json().then((imgData) => {
+                        const imgPromises = []
+                        imgData.forEach((image) => {
+                            imgPromises.push(new Promise((resolve, reject) => {
+                                const img = new Image();
+                                img.id = image.id;
+                                img.Name = image.Name;
+                                img.Description = image.Description;
+                                img.addEventListener('click', imgActivate);
+                                img.onload = (e) => {
+                                    resolve(img);
+                                }
+                                img.src = image.Src_path;
+                            }));
+                        });
+                        thumbnails.innerHTML = "";
+                        Promise.all(imgPromises).then((imgArray) => {
+                            imgArray.forEach((img)=>{
+                                imageList.push(img);
+                                thumbnails.appendChild(img);
+                            });
+                            imgArray[0].click();
+                        });
+                    });
+                }).catch(err => console.error);
             });
         }
     }).catch(err => console.error);
 } else {
     console.log('No Parameters in URL');
 }
+
+
+
+
+function imgActivate(e) {
+    selectedImg.src = this.src;
+    selectedImg.title = this.Name;
+    descPanel.textContent = this.Description;
+    imgName.textContent = this.Name;
+
+    imageList.forEach(img => { img.classList.remove("activeThumb"); })
+    this.classList.add("activeThumb");
+}
+const prevBtn = document.querySelector("#id_prev");
+prevBtn.addEventListener("click", (event)=>{
+    if (imageList.indexOf(imageList.find(img => img.src === selectedImg.src)) === 0) {
+        imageList[imageList.length - 1].click();
+    } else {
+        imageList[imageList.indexOf(imageList.find(img => img.src === selectedImg.src)) - 1].click();
+    }
+});
+
+const nextBtn = document.querySelector("#id_next");
+nextBtn.addEventListener("click", (event)=>{
+    if (imageList.indexOf(imageList.find(img => img.src === selectedImg.src)) === (imageList.length - 1)) {
+        imageList[0].click();
+    } else {
+        imageList[imageList.indexOf(imageList.find(img => img.src === selectedImg.src)) + 1].click();
+    }
+});

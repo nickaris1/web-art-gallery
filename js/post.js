@@ -93,7 +93,7 @@ app.post('/api/upload', (req, res) => {
         }
 
         const imageData = req.body;
-        imageData["srcPath"] = path.join(process.cwd(), './uploads/', req.files[0].filename);
+        imageData["srcPath"] = path.join('./uploads/', req.files[0].filename);
 
         databaseAccess.addImage(imageData, (status) => {
             if (status === 200) {
