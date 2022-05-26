@@ -15,7 +15,7 @@ fetch("/api/getCollections").then((response) => {
                 const link = document.createElement("a");
                 link.textContent = item.Name;
                 link.collectionId = item.id;
-                link.addEventListener('click', (e) => {
+                newCollection.addEventListener('click', (e) => {
                     showCollection(item.id);
                 });
                 newCollection.appendChild(link);

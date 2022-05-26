@@ -1,3 +1,6 @@
+html {
+    background-color: #e1c774;
+}
 .content {
     display: grid;
     grid-template-rows: 1fr;
@@ -19,6 +22,10 @@
     /* height: 100% ; */
 }
 
+#id_collectionList a {
+    text-decoration: underline;
+}
+
 .SelectedCollection {
     padding-left: 30px;
     grid-column-start: 2;
@@ -29,8 +36,6 @@
 #collectionImages {
     max-width: 800px;
     margin: auto;
-    border: white solid 5px;
-    background-color: white;
 }
 
 #panel-main img,
