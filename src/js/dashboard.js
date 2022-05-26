@@ -23,7 +23,7 @@ const collectionSelect = document.querySelector("#id_collectionSelect");
 const collectionListEventSelect = document.querySelector("#id_collectionListSelect");
 
 const xhrCollectionSelect = new XMLHttpRequest();
-xhrCollectionSelect.open("GET", "/api/getCollection", true);
+xhrCollectionSelect.open("GET", "/api/getCollections", true);
 xhrCollectionSelect.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         const myArr = JSON.parse(this.responseText);

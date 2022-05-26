@@ -1,0 +1,14 @@
+.More_Info {
+    background-image: linear-gradient(to bottom, rgba(83, 83, 83, 1), rgba(57, 57, 57, 1));
+    height: 175px;
+}
+
+.More_Info span {
+    display: inline-block;
+    margin-left: 150px;
+}
+
+.More_Info h2 {
+    font-size: 40px;
+    margin: 0px;
+}

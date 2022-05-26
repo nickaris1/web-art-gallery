@@ -55,18 +55,22 @@ app.get("/api/getArtist", (req, res) => {
     });
 });
 
+app.get("/api/getArtistById", (req, res) => {
+    if(req.query.id != undefined){
+        databaseAccess.getArtistById(req.query.id, (rows) => {
+            res.status(200).send(JSON.stringify(rows));
+        });
+    } else {
+        res.sendStatus(400);
+    }
+});
+
 app.get("/api/getUsers", (req, res) => {
     if (CookieVerifier.verifyCookieAdmin(req.cookies.data)) {
         databaseAccess.getUsers((rows) => {
             res.status(200).send(JSON.stringify(rows));
         });
     }
-});
-
-app.get("/api/getCollection", (req, res) => {
-    databaseAccess.getCollections((rows) => {
-        res.status(200).send(JSON.stringify(rows));
-    });
 });
 
 app.get("/api/getAvailableEvents", (req, res) => {
@@ -118,6 +122,22 @@ app.get("/api/imagesForCollection", (req, res) => {
     if (req.query.id != undefined) {
         databaseAccess.getImagesInCollection(req.query.id, (rows) => {
             res.status(200).send(rows);
+        });
+    } else {
+        res.sendStatus(400);
+    }
+});
+
+app.get("/api/getCollections", (req, res) => {
+    databaseAccess.getCollections((rows) => {
+        res.status(200).send(JSON.stringify(rows));
+    });
+});
+
+app.get("/api/getCollectionById", (req, res) => {
+    if (req.query.id != undefined) {
+        databaseAccess.getCollectionById(req.query.id, (rows) => {
+            res.status(200).send(JSON.stringify(rows));
         });
     } else {
         res.sendStatus(400);

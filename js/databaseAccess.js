@@ -123,6 +123,21 @@ exports.getArtists = function (callback) {
 }
 
 /**
+ * @param {number} artistId
+ * @param {function} callback 
+ */
+ exports.getArtistById = function (artistId, callback) {
+    global.db.all("SELECT * FROM 'ARTIST' where id=?", [artistId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows[0]);
+        }
+    });
+}
+
+/**
  * @param {string} artistName
  * @param {function} callback 
  */
@@ -171,6 +186,21 @@ exports.getCollections = function (callback) {
             callback({});
         } else {
             callback(rows);
+        }
+    });
+}
+
+/**
+ * @param {number} collectionId
+ * @param {function} callback 
+ */
+ exports.getCollectionById = function (collectionId, callback) {
+    global.db.all("SELECT * FROM 'COLLECTION' where id=?", [collectionId], (error, rows) => {
+        if (error) {
+            logger.error(error);
+            callback({});
+        } else {
+            callback(rows[0]);
         }
     });
 }
