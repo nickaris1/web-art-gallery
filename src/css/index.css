@@ -60,6 +60,39 @@
     transition: .5s ease-in-out, box-shadow .5s ease-in-out;
 }
 
+.cc_button {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: relative;
+    justify-content: center;
+}
+
+.CollectionButton {
+    color: rgba(255, 255, 255, 0);
+    background-color: rgba(0, 0, 0, 0);
+
+    border: 0px black solid;
+
+    
+    margin-top: 100px;
+    font-size: 20px;
+
+    text-align: center;
+    padding-top: 25px;
+    width: 20em;
+    height: 100px;
+    border-radius: 8px;
+}
+
+#id_cc:hover .CollectionButton {
+    background-color: white;
+    color: black;
+    border: 5px black solid;
+    border-radius: 8px;
+    
+}
+
 /* Section 3 */
 
 .Events_and_Exhibitions {
