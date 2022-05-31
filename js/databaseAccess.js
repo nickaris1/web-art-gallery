@@ -289,7 +289,7 @@ exports.getImagesInCollection = function (collectionId, callback) {
  * @param {function} callback callback function 0 => error, 200 => OK, 1 => event exist
  */
 exports.addEvent = function (eventData, callback) {
-    global.db.all("INSERT INTO EVENT ('Address', 'StartDate', 'EndDate', 'MaxTickets') VALUES (?, ?, ?, ?)", [eventData.address, eventData.startDate, eventData.endDate, eventData.maxTickets], (error, rows) => {
+    global.db.all("INSERT INTO EVENT ('Name', 'Address', 'StartDate', 'EndDate', 'MaxTickets') VALUES (?, ?, ?, ?, ?)", [eventData.Name, eventData.address, eventData.startDate, eventData.endDate, eventData.maxTickets], (error, rows) => {
         if (error) {
             logger.error(error);
             callback(0);
@@ -315,7 +315,11 @@ exports.addEvent = function (eventData, callback) {
                         eventData.collections.forEach(collection => {
                             this.getCollectionByName(collection, (row) => {
                                 this.addExhibition({ collectionId: row.id, eventId: rows[rows.length - 1].id }, (status) => {
-                                    return;
+                                    if (status === 200) {
+                                        callback(200);
+                                    } else {
+                                        callback(0);
+                                    }
                                 });
                             });
 
@@ -323,7 +327,6 @@ exports.addEvent = function (eventData, callback) {
                     }
                 }
             });
-            callback(200);
         }
     });
 }
