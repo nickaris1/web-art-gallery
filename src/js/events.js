@@ -8,7 +8,7 @@ const thumbnails = document.querySelector(".thumbnails")
 
 const reserveBtn = document.querySelector("#id_reserve");
 
-fetch("/api/getEvents").then((response) => {
+fetch("/api/getAvailableEvents").then((response) => {
     if (response.status === 200) {
         response.json().then((data) => {
             data.forEach(item => {

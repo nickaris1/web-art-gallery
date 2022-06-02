@@ -366,7 +366,7 @@ exports.getEventById = function (eventId, callback) {
  * @param {function} callback {} => if evemt not found, eventRows in json if user is found
  */
 exports.getAvailableEvents = function (callback) {
-    global.db.all("SELECT * FROM 'EVENT' where EndDate > DATE('now')", (error, rows) => {
+    global.db.all("SELECT * FROM 'EVENT' where EndDate > DATE('now') ORDER BY EndDate", (error, rows) => {
         if (error) {
             logger.error(error);
             callback({});
