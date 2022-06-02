@@ -10,16 +10,16 @@ fetch("/api/getEvents").then((response) => {
     if (response.status === 200) {
         response.json().then((data) => {
             data.forEach(item => {
-                const newCollection = document.createElement("li");
+                const newEvent = document.createElement("li");
 
                 const link = document.createElement("a");
                 link.textContent = item.Name;
                 link.collectionId = item.id;
-                newCollection.addEventListener('click', (e) => {
+                newEvent.addEventListener('click', (e) => {
                     showCollection(item.id);
                 });
-                newCollection.appendChild(link);
-                collectionList.appendChild(newCollection);
+                newEvent.appendChild(link);
+                collectionList.appendChild(newEvent);
 
             });
         });
@@ -31,61 +31,46 @@ if (urlstr.includes('?')) {
     console.log('Parameterised URL');
     const url = new URL(urlstr);
     const id = url.searchParams.get("id");
-    showCollection(id);
+    showEvent(id);
 } else {
     console.log('No Parameters in URL');
 }
 
-function showCollection(id) {
-    fetch("/api/getCollectionById?id=" + id).then((response) => {
+function showEvent(id) {
+    fetch("/api/getEventById?id=" + id).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
-                document.querySelector("#collectionName").textContent = "Collection Name: " + data.Name;
-                document.querySelector("#collectionDescription").textContent = "Collection Description: " + data.Description;
-                fetch("/api/getArtistById?id=" + data.ArtistID).then((artistRes) => {
-                    artistRes.json().then((artistData) => {
-                        document.querySelector("#artistName").textContent = "Artist Name: " + artistData.Name;
-                    });
-                }).catch(err => console.error);
+                document.querySelector("#EventName").textContent = "Event Name: " + data.Name;
+                document.querySelector("#EventAddress").textContent = "Event Address: " + data.Address;
+                
+                document.querySelector("#EventStart").textContent = "Start Date: " + data.StartDate;
+                document.querySelector("#EventEnd").textContent = "End date: " + data.EndDate;
+                document.querySelector("#MaxTickets").textContent = "Max Tickets: " + data.Description;
+                document.querySelector("#ReserveTickets").textContent = "reservedTickets:"  + data.reservedTickets;
 
-                fetch("/api/imagesForCollection?id=" + id).then((imgResponse) => {
-                    imgResponse.json().then((imgData) => {
-                        const imgPromises = []
-                        imgData.forEach((image) => {
-                            imgPromises.push(new Promise((resolve, reject) => {
-                                const img = new Image();
-                                img.id = image.id;
-                                img.Name = image.Name;
-                                img.Description = image.Description;
-                                img.addEventListener('click', imgActivate);
-                                img.onload = (e) => {
-                                    resolve(img);
+                
+                fetch("/api/getEventCollection?id=" + id).then((EVresponse) => {
+                    if (EVresponse.status === 200) {
+                        EVresponse.json().then((EVdata) => {
+                            EVdata.forEach(eventColleciton=>{
+                                fetch("/api/getCollectionById?id=" + eventColleciton.CollectionID).then((collectionResponse) =>{
+                                    if (collectionResponse.status === 200) {
+                                        collectionResponse.json().then(
+
+                                        )
+                                    }
                                 }
-                                img.src = image.Src_path;
-                            }));
-                        });
-                        thumbnails.innerHTML = "";
-                        Promise.all(imgPromises).then((imgArray) => {
-                            imgArray.forEach((img)=>{
-                                imageList.push(img);
-                                thumbnails.appendChild(img);
-                            });
-                            imgArray[0].click();
-                        });
-                    });
-                }).catch(err => console.error);
+
+                                ).catch(err=>console.err)
+                            })
+                        })
+                    }
+                }).catch(err=>console.error)
+
+
             });
         }
     }).catch(err => console.error);
 }
 
 
-function imgActivate(e) {
-    selectedImg.src = this.src;
-    selectedImg.title = this.Name;
-    descPanel.textContent = this.Description;
-    imgName.textContent = this.Name;
-
-    imageList.forEach(img => { img.classList.remove("activeThumb"); })
-    this.classList.add("activeThumb");
-}

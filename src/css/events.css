@@ -8,32 +8,32 @@ html {
     border: 1px solid black;
 }
 
-.CollectionList {
+.EventList {
     grid-column-start: 1;
     grid-column-end: 2;
     border: 3px solid black;
 
 }
 
-#id_collectionList {
+#id_eventList {
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
     /* height: 100% ; */
 }
 
-#id_collectionList a {
+#id_eventList a {
     text-decoration: underline;
 }
 
-.SelectedCollection {
+.SelectedEvent {
     padding-left: 30px;
     grid-column-start: 2;
     grid-column-end: 3;
     border: 3px solid black;
 }
 
-#collectionImages {
+#eventImages {
     max-width: 800px;
     margin: auto;
 }
