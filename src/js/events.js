@@ -1,5 +1,5 @@
 const imageList = []
-const collectionList = document.querySelector("#id_collectionList");
+const eventList = document.querySelector("#id_EventList");
 
 const descPanel = document.querySelector("#id_description");
 const selectedImg = document.querySelector("#selected");
@@ -14,12 +14,12 @@ fetch("/api/getEvents").then((response) => {
 
                 const link = document.createElement("a");
                 link.textContent = item.Name;
-                link.collectionId = item.id;
+                link.eventId = item.id;
                 newEvent.addEventListener('click', (e) => {
-                    showCollection(item.id);
+                    showEvent(item.id);
                 });
                 newEvent.appendChild(link);
-                collectionList.appendChild(newEvent);
+                eventList.appendChild(newEvent);
 
             });
         });
@@ -37,37 +37,43 @@ if (urlstr.includes('?')) {
 }
 
 function showEvent(id) {
+    document.querySelector("#id_collectionList").innerHTML = "";
     fetch("/api/getEventById?id=" + id).then((response) => {
         if (response.status === 200) {
             response.json().then((data) => {
+                data = data[0];
+                console.log(data);
                 document.querySelector("#EventName").textContent = "Event Name: " + data.Name;
                 document.querySelector("#EventAddress").textContent = "Event Address: " + data.Address;
-                
+
                 document.querySelector("#EventStart").textContent = "Start Date: " + data.StartDate;
                 document.querySelector("#EventEnd").textContent = "End date: " + data.EndDate;
-                document.querySelector("#MaxTickets").textContent = "Max Tickets: " + data.Description;
-                document.querySelector("#ReserveTickets").textContent = "reservedTickets:"  + data.reservedTickets;
+                document.querySelector("#MaxTickets").textContent = "Max Tickets: " + data.MaxTickets;
+                document.querySelector("#ReserveTickets").textContent = "reservedTickets:" + data.reservedTickets;
 
-                
+
                 fetch("/api/getEventCollection?id=" + id).then((EVresponse) => {
                     if (EVresponse.status === 200) {
                         EVresponse.json().then((EVdata) => {
-                            EVdata.forEach(eventColleciton=>{
-                                fetch("/api/getCollectionById?id=" + eventColleciton.CollectionID).then((collectionResponse) =>{
+                            EVdata.forEach(eventColleciton => {
+                                fetch("/api/getCollectionById?id=" + eventColleciton.CollectionID).then((collectionResponse) => {
                                     if (collectionResponse.status === 200) {
-                                        collectionResponse.json().then(
+                                        collectionResponse.json().then((collectionData) => {
+                                            const collectionItem = document.createElement("li");
 
-                                        )
+                                            const collectionLink = document.createElement("a");
+                                            collectionLink.textContent = collectionData.Name;
+                                            collectionLink.href = "/collections.html?id=" + collectionData.id;
+
+                                            collectionItem.appendChild(collectionLink);
+                                            document.querySelector("#id_collectionList").appendChild(collectionItem);
+                                        });
                                     }
-                                }
-
-                                ).catch(err=>console.err)
-                            })
-                        })
+                                }).catch(err => console.err)
+                            });
+                        });
                     }
-                }).catch(err=>console.error)
-
-
+                }).catch(err => console.error);
             });
         }
     }).catch(err => console.error);
