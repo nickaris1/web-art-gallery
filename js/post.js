@@ -7,6 +7,11 @@ const path = require("path");
 const process = require('process');
 const databaseAccess = require('./databaseAccess');
 
+
+const log4js = require("log4js");
+const logger = log4js.getLogger("[POST HANDLER]");
+logger.level = global.LOGGERLEVEL;
+
 const app = express();
 const upload = multer();
 
@@ -184,7 +189,7 @@ app.post("/api/deleteUser", upload.none(), (req, res) => {
 });
 
 app.post("/api/reserveEvent", upload.none(), (req, res) => {
-    eventReservation(req, (isReserved) => {
+    eventReservation(req, res, (isReserved) => {
         if(!isReserved) {
             databaseAccess.addTicket(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (status) => {
                 if (status === 200) {
@@ -198,7 +203,7 @@ app.post("/api/reserveEvent", upload.none(), (req, res) => {
 });
 
 app.post("/api/cancelEvent", upload.none(), (req, res) => {
-    eventReservation(req, (isReserved) => {
+    eventReservation(req, res, (isReserved) => {
         if(isReserved) {
             databaseAccess.cancelTicket(req.body.EventId, CookieVerifier.getUserId(req.cookies.data), (status) => {
                 if (status === 200) {
@@ -211,8 +216,8 @@ app.post("/api/cancelEvent", upload.none(), (req, res) => {
     });
 });
 
-function eventReservation(req, callback) {
-    if (CookieVerifier.verifyCookieLogin(req.cookies.data) && typeof parseInt(req.body.EventId) === "number") {
+function eventReservation(req, res, callback) {
+    if (CookieVerifier.verifyCookieLogin(req.cookies.data) && req.body.EventId != undefined && typeof parseInt(req.body.EventId) === "number") {
         // check if event has ended
         databaseAccess.getEventStatusById(req.body.EventId, (eventStatus) => {
             if (eventStatus) {
@@ -225,6 +230,12 @@ function eventReservation(req, callback) {
             }
         });
     } else {
+        if (req.body.EventId != undefined) {
+            logger.error("User not authenticated");
+        } else {
+            logger.error("EventId === undefined");
+        }
+        
         res.sendStatus(401);
     }
 }

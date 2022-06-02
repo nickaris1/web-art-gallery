@@ -20,21 +20,24 @@ fetch("/api/getCollections").then((response) => {
                 });
                 newCollection.appendChild(link);
                 collectionList.appendChild(newCollection);
-
             });
+
+
+            const urlstr = window.location.href;
+            if (urlstr.includes('?')) {
+                console.log('Parameterised URL');
+                const url = new URL(urlstr);
+                const id = url.searchParams.get("id");
+                showCollection(id);
+            } else {
+                console.log('No Parameters in URL');
+                collectionList.childNodes[1].click();
+            }
         });
     }
 }).catch(err => console.error)
 
-const urlstr = window.location.href;
-if (urlstr.includes('?')) {
-    console.log('Parameterised URL');
-    const url = new URL(urlstr);
-    const id = url.searchParams.get("id");
-    showCollection(id);
-} else {
-    console.log('No Parameters in URL');
-}
+
 
 function showCollection(id) {
     fetch("/api/getCollectionById?id=" + id).then((response) => {
@@ -66,7 +69,7 @@ function showCollection(id) {
                         });
                         thumbnails.innerHTML = "";
                         Promise.all(imgPromises).then((imgArray) => {
-                            imgArray.forEach((img)=>{
+                            imgArray.forEach((img) => {
                                 imageList.push(img);
                                 thumbnails.appendChild(img);
                             });
@@ -89,8 +92,9 @@ function imgActivate(e) {
     imageList.forEach(img => { img.classList.remove("activeThumb"); })
     this.classList.add("activeThumb");
 }
+
 const prevBtn = document.querySelector("#id_prev");
-prevBtn.addEventListener("click", (event)=>{
+prevBtn.addEventListener("click", (event) => {
     if (imageList.indexOf(imageList.find(img => img.src === selectedImg.src)) === 0) {
         imageList[imageList.length - 1].click();
     } else {
@@ -99,7 +103,7 @@ prevBtn.addEventListener("click", (event)=>{
 });
 
 const nextBtn = document.querySelector("#id_next");
-nextBtn.addEventListener("click", (event)=>{
+nextBtn.addEventListener("click", (event) => {
     if (imageList.indexOf(imageList.find(img => img.src === selectedImg.src)) === (imageList.length - 1)) {
         imageList[0].click();
     } else {
