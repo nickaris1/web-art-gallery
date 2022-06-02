@@ -56,7 +56,7 @@ app.get("/api/getArtist", (req, res) => {
 });
 
 app.get("/api/getArtistById", (req, res) => {
-    if(req.query.id != undefined){
+    if (req.query.id != undefined) {
         databaseAccess.getArtistById(req.query.id, (rows) => {
             res.status(200).send(JSON.stringify(rows));
         });
@@ -106,6 +106,41 @@ app.get("/api/getEvents", (req, res) => {
     databaseAccess.getEvents((rows) => {
         res.status(200).send(JSON.stringify(rows));
     });
+});
+
+app.get("/api/getEventById", (req, res) => {
+    if (req.query.id != undefined) {
+
+        databaseAccess.getEventById(req.query.id, (rows) => {
+
+            const promises = [];
+            rows.forEach((row, index, arr) => {
+                promises.push(new Promise((resolve) => {
+                    databaseAccess.getTicketActiveReservations(row.id, (reservedTicketsCount) => {
+                        arr[index].reservedTickets = reservedTicketsCount;
+                        resolve(1);
+                    });
+                }));
+
+                // Get if user has reserved a ticket
+                if (CookieVerifier.verifyCookieLogin(req.cookies.data)) {
+                    promises.push(new Promise((resolve) => {
+                        databaseAccess.getIfUserHasTicketForEvent(row.id, CookieVerifier.getUserId(req.cookies.data), (isReserved) => {
+                            arr[index].isReserved = isReserved;
+                            resolve(1);
+                        });
+                    }));
+                }
+            });
+
+            Promise.all(promises).then(() => {
+                // logger.debug(rows);
+                res.status(200).send(JSON.stringify(rows));
+            });
+        });
+    } else {
+        res.sendStatus(400);
+    }
 });
 
 app.get("/api/getEventCollection", (req, res) => {
