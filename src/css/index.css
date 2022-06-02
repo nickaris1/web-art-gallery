@@ -13,7 +13,7 @@
 /* Section 2 */
 
 .Current_Collection {
-    background-image: url("/images/LF_Background.jpg");
+    /* background-image: url("/images/LF_Background.jpg"); */
     background-repeat: no-repeat;
     position: relative;
     top: 0px;
