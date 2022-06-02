@@ -36,7 +36,7 @@ fetch("/api/getAvailableEvents").then((eventRequest) => {
         const event = eventList[0];
         console.log(event);
 
-        const doc = `${event.Name}<br>${event.Address}<br>${event.StartDate.substring(0, 10)} - ${event.EndDate.substring(0, 10)}<br>`;
+        const doc = `Event Name: ${event.Name}<br>Address: ${event.Address}<br>${event.StartDate.substring(0, 10)} - ${event.EndDate.substring(0, 10)}<br>`;
         console.log(doc)
         document.querySelector(".Content .Events").innerHTML = doc;
 

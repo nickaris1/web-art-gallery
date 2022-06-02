@@ -53,8 +53,8 @@ function showEvent(id) {
                 document.querySelector("#EventName").textContent = "Event Name: " + data.Name;
                 document.querySelector("#EventAddress").textContent = "Event Address: " + data.Address;
 
-                document.querySelector("#EventStart").textContent = "Start Date: " + data.StartDate;
-                document.querySelector("#EventEnd").textContent = "End date: " + data.EndDate;
+                document.querySelector("#EventStart").textContent = "Start Date: " + data.StartDate.substring(0, 10);
+                document.querySelector("#EventEnd").textContent = "End date: " + data.EndDate.substring(0, 10);
                 document.querySelector("#MaxTickets").textContent = "Max Tickets: " + data.MaxTickets;
                 document.querySelector("#ReserveTickets").textContent = "reservedTickets:" + data.reservedTickets;
 
