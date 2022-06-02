@@ -19,7 +19,7 @@ app.post("/api/login", upload.none(), (req, res, next) => {
             return Buffer.from(str_json).toString('base64');
         }
 
-        databaseAccess.getUserById(req.body.email, (userdata) => {
+        databaseAccess.getUserByEmail(req.body.email, (userdata) => {
             if (userdata === {}) {
                 console.log("Reported IP" + req.ip);
                 res.sendStatus(403);

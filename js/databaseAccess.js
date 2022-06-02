@@ -20,7 +20,7 @@ exports.hash = function (string) {
  * @param {string} userEmail user email to check if exists in db
  * @param {function} callback {} => if user not found, userdata in json if user is found
  */
-exports.getUserById = function (userEmail, callback) {
+exports.getUserByEmail = function (userEmail, callback) {
     global.db.all("SELECT * FROM 'USER' WHERE email == ?", [userEmail], (error, rows) => {
         if (error) {
             logger.error(error);
@@ -56,7 +56,7 @@ exports.getUsers = function (callback) {
  * @param {Function} callback callback function 0 => error, 200 => OK
  */
 exports.addUser = function (userdata, callback) {
-    this.getUser(userdata.email, (dbUserData) => {
+    this.getUserByEmail(userdata.email, (dbUserData) => {
         if (dbUserData === undefined || dbUserData === {}) {
             global.db.all("INSERT INTO USER ('Email', 'Name', 'Phone', 'PasswordHash') VALUES (?, ?, ?, ?)", [userdata.email.trim(), userdata.name.trim(), userdata.phone, this.hash(userdata.pass.trim())], (error, rows) => {
                 if (error) {
