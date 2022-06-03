@@ -26,12 +26,12 @@ function createEventList() {
                 listItem.appendChild(address);
 
                 const startDate = document.createElement("p");
-                startDate.textContent = event.StartDate;
+                startDate.textContent = event.StartDate.substring(0, 10);
                 listItem.appendChild(startDate);
 
 
                 const endDate = document.createElement("p");
-                endDate.textContent = event.EndDate;
+                endDate.textContent = event.EndDate.substring(0, 10);
                 listItem.appendChild(endDate);
 
                 const reservedTickets = document.createElement("p");
