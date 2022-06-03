@@ -54,9 +54,9 @@ function showEvent(id) {
                 document.querySelector("#EventAddress").textContent = "Event Address: " + data.Address;
 
                 document.querySelector("#EventStart").textContent = "Start Date: " + data.StartDate.substring(0, 10);
-                document.querySelector("#EventEnd").textContent = "End date: " + data.EndDate.substring(0, 10);
+                document.querySelector("#EventEnd").textContent = "End Date: " + data.EndDate.substring(0, 10);
                 document.querySelector("#MaxTickets").textContent = "Max Tickets: " + data.MaxTickets;
-                document.querySelector("#ReserveTickets").textContent = "reservedTickets:" + data.reservedTickets;
+                document.querySelector("#ReserveTickets").textContent = "Reserved Tickets:" + data.reservedTickets;
 
 
                 verifyUser("/api/verify").then((responseCode) => {
