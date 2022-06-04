@@ -20,9 +20,9 @@ This software requires nodejs built with version 16.15.0 (https://nodejs.org/en/
    npm install
    ```
 ### Start the application
-   ```sh
-   npm run start
-   ```
+```sh
+    npm run start
+```
 
 
 ## Build with Docker
