@@ -23,3 +23,13 @@ This software requires nodejs built with version 16.15.0 (https://nodejs.org/en/
    ```sh
    npm run start
    ```
+
+
+## Build with Docker
+```sh
+    docker build -t web_art_gallery .
+```
+
+```sh
+    docker run -p 8080:5500 web_art_gallery
+```
