@@ -14,12 +14,17 @@ ul {
 }
 
 li {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: inline-grid;
+    grid-template-columns: 100%;
+    justify-content: space-around;
+    margin-left: 7%;
 
 }
 
 li p {
     display: inline-block;
+}
+
+input {
+    width: 75px;
 }

@@ -10,7 +10,9 @@ function createEventList() {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             eventList.innerHTML = "";
             const myArr = JSON.parse(this.responseText);
+            eventList.appendChild(createTable());
             myArr.forEach((event) => {
+                
                 const listItem = document.createElement("li");
 
                 const id = document.createElement("p");
@@ -61,6 +63,7 @@ function createEventList() {
                 }
 
                 listItem.appendChild(reserveBtn);
+                reserveBtn.classList.add("input");
 
                 eventList.appendChild(listItem);
 
@@ -100,4 +103,39 @@ async function cancelListener(eventId) {
         data.append("EventId", eventId);
         reserveRequest.send(data);
     }
+}
+
+function createTable () {
+    
+    const listItem = document.createElement("li");
+    const id = document.createElement("p");
+    id.textContent = "Annual id : ";
+    listItem.appendChild(id);
+
+    const name = document.createElement("p");
+    name.textContent = "Name : ";
+    listItem.appendChild(name);
+
+    const address = document.createElement("p");
+    address.textContent = "Featured in : ";
+    listItem.appendChild(address);
+
+    const startDate = document.createElement("p");
+    startDate.textContent = "Starts in : ";
+    listItem.appendChild(startDate);
+
+
+    const endDate = document.createElement("p");
+    endDate.textContent = "Ends in : ";
+    listItem.appendChild(endDate);
+
+    const reservedTickets = document.createElement("p");
+    reservedTickets.textContent = "Reserved tickets : "
+    listItem.appendChild(reservedTickets);
+
+    const maxTickets = document.createElement("p");
+    maxTickets.textContent = "Max tickets : ";
+    listItem.appendChild(maxTickets);
+
+    return listItem;
 }
