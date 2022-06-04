@@ -12,7 +12,7 @@ function createEventList() {
             const myArr = JSON.parse(this.responseText);
             eventList.appendChild(createTable());
             myArr.forEach((event) => {
-                
+
                 const listItem = document.createElement("li");
 
                 const id = document.createElement("p");
@@ -21,6 +21,9 @@ function createEventList() {
 
                 const name = document.createElement("p");
                 name.textContent = event.Name;
+                name.addEventListener('click', (e) => {
+                    window.location.replace("events.html?id=" + event.id);
+                });
                 listItem.appendChild(name);
 
                 const address = document.createElement("p");
@@ -105,8 +108,8 @@ async function cancelListener(eventId) {
     }
 }
 
-function createTable () {
-    
+function createTable() {
+
     const listItem = document.createElement("li");
     const id = document.createElement("p");
     id.textContent = "Annual id : ";
