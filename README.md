@@ -33,3 +33,12 @@ This software requires nodejs built with version 16.15.0 (https://nodejs.org/en/
 ```sh
     docker run -p 8080:5500 web_art_gallery
 ```
+
+# Testing Credentials
+### Admin
+email: admin@admin.admin
+password: admin
+
+### User
+email: user@user.user
+password: user
